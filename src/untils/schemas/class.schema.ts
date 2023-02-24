@@ -1,12 +1,11 @@
+import { Teacher } from './teacher.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Subject } from './subject.schema';
+import { Room } from './room.schema';
 
 @Schema()
 export class Class {
-  @Prop()
-  id_class: string;
-
   @Prop()
   class_name: string;
 
@@ -16,11 +15,11 @@ export class Class {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' })
   id_subject: Subject;
 
-  @Prop()
-  id_teacher: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Teacher' })
+  id_teacher: Teacher;
 
-  @Prop()
-  id_room: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Room' })
+  id_room: Room;
 
   @Prop()
   limit_student: number;

@@ -1,16 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { Class } from './class.schema';
 
 @Schema()
 export class Room {
   @Prop()
-  name: string;
+  id_room: string;
 
   @Prop()
-  age: number;
-
-  @Prop()
-  breed: string;
+  name_room: string;
 }
 
 export const RoomSchema = SchemaFactory.createForClass(Room);

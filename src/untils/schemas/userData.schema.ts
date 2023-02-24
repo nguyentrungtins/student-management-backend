@@ -9,7 +9,10 @@ export class UserData {
   id_user: User;
   
   @Prop()
-  img: string;
+  id_student: string; // mã sinh viên: ví dụ B180xxxx
+  
+  @Prop()
+  img: string; // link ảnh đại diện
 
   @Prop()
   first_name: string;

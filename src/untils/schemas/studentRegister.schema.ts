@@ -1,16 +1,15 @@
+import { User } from './user.schema';
+import { Class } from './class.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 
 @Schema()
 export class StudentRegister {
-  @Prop()
-  name: string;
+  @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Class'})
+  id_class: Class;
 
-  @Prop()
-  age: number;
-
-  @Prop()
-  breed: string;
+  @Prop([{type: mongoose.Schema.Types.ObjectId, ref: 'User'}])
+  id_user: User[];
 }
 
 export const StudentRegisterSchema =

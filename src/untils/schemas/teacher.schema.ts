@@ -1,17 +1,31 @@
+import { Subject } from './subject.schema';
+import { Class } from './class.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
-
+import mongoose, { HydratedDocument } from 'mongoose';
 
 @Schema()
 export class Teacher {
-  @Prop()
-  name: string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' })
+  id_subject: Subject;
 
   @Prop()
-  age: number;
+  degree: string;
 
   @Prop()
-  breed: string;
+  teacher_name: string;
+
+  @Prop()
+  teacher_age: number;
+
+  @Prop()
+  teacher_address: string;
+
+  @Prop()
+  teacher_phone: string;
+
+  @Prop()
+  teacher_email: string;
 }
 
 export const TeacherSchema = SchemaFactory.createForClass(Teacher);
