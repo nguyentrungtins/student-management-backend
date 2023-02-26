@@ -15,7 +15,6 @@ export class UserService {
     const user = await this.userModel
       .find({ user_name: user_name })
       .populate('id_role');
-    
     return user[0];
   }
 }

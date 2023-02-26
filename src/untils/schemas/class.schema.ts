@@ -10,7 +10,7 @@ export class Class {
   class_name: string;
 
   @Prop()
-  number_student: number;
+  id_class: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' })
   id_subject: Subject;
