@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { SubjectModule } from './subject/subject.module';
 import { ClassModule } from './class/class.module';
 import { TeacherModule } from './teacher/teacher.module';
+import { RegisterClassModule } from './register-class/register-class.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { TeacherModule } from './teacher/teacher.module';
     SubjectModule,
     ClassModule,
     TeacherModule,
+    RegisterClassModule,
   ],
   controllers: [AppController],
   providers: [AppService],
