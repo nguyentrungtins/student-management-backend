@@ -7,7 +7,7 @@ import * as mongoose from 'mongoose';
 export class UserData {
   @Prop()
   id_student: string; // mã sinh viên: ví dụ B180xxxx
-  
+
   @Prop()
   img: string; // link ảnh đại diện
 
@@ -28,6 +28,9 @@ export class UserData {
 
   @Prop()
   birth_date: string;
+
+  @Prop()
+  major: string;
 }
 
 export const UserDataSchema = SchemaFactory.createForClass(UserData);

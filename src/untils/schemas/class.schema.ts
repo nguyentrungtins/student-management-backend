@@ -30,6 +30,12 @@ export class Class {
 
   @Prop()
   current_student: number;
+
+  @Prop()
+  status: string;
+
+  @Prop()
+  major_tag: Array<string>;
 }
 
 export const ClassSchema = SchemaFactory.createForClass(Class);
