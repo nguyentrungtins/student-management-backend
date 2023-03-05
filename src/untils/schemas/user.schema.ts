@@ -6,11 +6,11 @@ import * as mongoose from 'mongoose';
 
 @Schema()
 export class User {
-  @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'UserData'})
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'UserData' })
   id_user: UserData; // id liên kết với user data
 
   @Prop()
-  user_name: string; 
+  user_name: string;
 
   @Prop()
   pass_word: string;
