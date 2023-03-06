@@ -1,5 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 export class ClassDTO {
+  id?: string;
   @IsNotEmpty()
   class_name: string;
   @IsNotEmpty()
@@ -11,7 +12,7 @@ export class ClassDTO {
   @IsNotEmpty()
   id_room: string;
   @IsNotEmpty()
-  limit_student: number;
+  limit_student: string;
   @IsNotEmpty()
-  current_student: number;
+  current_student: string;
 }

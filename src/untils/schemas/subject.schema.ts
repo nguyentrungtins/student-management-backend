@@ -4,8 +4,6 @@ import { Class } from './class.schema';
 
 @Schema()
 export class Subject {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class' })
-  id_sub: Class; // mã _id trong mongodb
 
   @Prop()
   id_subject: string; // mã môn học ví dụ: CT102

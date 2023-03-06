@@ -1,15 +1,17 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, Matches } from 'class-validator';
 export class SubjectDTO {
+  id?: string;
   @IsNotEmpty()
   @IsString()
+  //@Matches()
   id_subject: string;
   @IsNotEmpty()
   @IsString()
   subject_name: string;
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   credit: number;
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   learn: number;
 }

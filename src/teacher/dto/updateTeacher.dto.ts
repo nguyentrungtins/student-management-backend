@@ -1,6 +1,5 @@
 export class UpdateTeacherDTO {
-  id_teacher: string;
-  name_subject: string;
+  _id: string;
   degree: string;
   teacher_name: string;
   teacher_age: number;

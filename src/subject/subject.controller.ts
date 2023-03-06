@@ -1,17 +1,26 @@
 import { UpdateSub } from './dto/updateSub.dto';
 import { SubjectService } from './subject.service';
 import { AuthGuard } from '@nestjs/passport';
-import { Controller, Post, UseGuards, Body } from '@nestjs/common';
+import { Controller, Post, UseGuards, Body, Request } from '@nestjs/common';
 import { SubjectDTO } from './dto';
 
 @Controller('/subject')
 export class SubjectController {
   constructor(private subjectService: SubjectService) {}
+  @Post('/get')
+  getAllSubject(@Body() filterQuery: any) {
+    return this.subjectService.getAllSubject(filterQuery);
+  }
 
   @UseGuards(AuthGuard('jwt'))
   @Post('/add')
-  addSubject(@Body() sub: SubjectDTO) {
-    return this.subjectService.addSubject(sub);
+  addSubject(@Request() req: any, @Body() sub: any) {
+    //console.log(sub.filterQuey);
+    return this.subjectService.addSubject(
+      sub.newSubject,
+      sub.filterQuey,
+      req.user,
+    );
   }
   @Post('/update')
   updateSubject(@Body() sub: UpdateSub) {
