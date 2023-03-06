@@ -25,17 +25,8 @@ export class Class {
   @Prop()
   limit_student: number;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'StudentRegister' })
-  student_register: StudentRegister;
-
   @Prop()
   current_student: number;
-
-  @Prop()
-  status: string;
-
-  @Prop()
-  major_tag: Array<string>;
 }
 
 export const ClassSchema = SchemaFactory.createForClass(Class);

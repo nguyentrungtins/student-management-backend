@@ -9,6 +9,7 @@ import { SubjectModule } from './subject/subject.module';
 import { ClassModule } from './class/class.module';
 import { TeacherModule } from './teacher/teacher.module';
 import { RegisterClassModule } from './register-class/register-class.module';
+import { SchedulingModule } from './scheduling/scheduling.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { RegisterClassModule } from './register-class/register-class.module';
     ClassModule,
     TeacherModule,
     RegisterClassModule,
+    SchedulingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

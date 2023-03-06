@@ -14,7 +14,7 @@ export class AuthService {
     const user = await this.userService.findOneUser(auth.user_name);
 
     if (!user || user.pass_word != auth.pass_word) {
-      throw new UnauthorizedException('Not correct account!')
+      throw new UnauthorizedException('Not correct account!');
     }
     return {
       access_token: this.signJWT(
