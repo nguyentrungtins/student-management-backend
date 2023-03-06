@@ -14,7 +14,6 @@ export class UserService {
     @InjectModel('UserData') private readonly userDataModel: Model<UserData>,
   ) {}
 
-
   async findOneUser(user_name: string) {
     const user = await this.userModel
       .find({ user_name: user_name })
@@ -33,12 +32,13 @@ export class UserService {
       phone: addUser.phone,
       email: addUser.email,
       birth_day: addUser.birth_day,
+      major: addUser.major,
     });
 
     const result = await newUser.save();
     const role = await this.roleModel.find({ name_role: 'Student' });
     const randomPassword = Math.random().toString(36).slice(-8);
-    
+
     const addNewUser = new this.userModel({
       id_user: result._id,
       user_name: result.id_student,
@@ -51,7 +51,7 @@ export class UserService {
   }
 
   async getUser(id_user: any) {
-    const infoUser = this.userModel.findById(id_user).populate('id_user')
-    return infoUser
+    const infoUser = this.userModel.findById(id_user).populate('id_user');
+    return infoUser;
   }
 }

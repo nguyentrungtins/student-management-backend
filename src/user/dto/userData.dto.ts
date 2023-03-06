@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { IsNotEmpty } from 'class-validator';
 
 export class UserDataDTO {
@@ -17,4 +18,5 @@ export class UserDataDTO {
   email: string;
   @IsNotEmpty()
   birth_day: string;
+  major: string;
 }
