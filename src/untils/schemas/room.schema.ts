@@ -1,6 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
-import { Class } from './class.schema';
 
 @Schema()
 export class Room {
@@ -11,10 +9,10 @@ export class Room {
   name_room: string;
 
   @Prop()
-  lab: boolean;
+  lab: boolean; // có máy tính để thực hành hay không
 
   @Prop()
-  seats: number;
+  seats: number; // chỗ chứa
 }
 
 export const RoomSchema = SchemaFactory.createForClass(Room);

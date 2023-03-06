@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 import { IsNotEmpty } from 'class-validator';
-=======
-/* eslint-disable prettier/prettier */
->>>>>>> master
+
 export class TeacherDTO {
   id?: string;
   @IsNotEmpty()

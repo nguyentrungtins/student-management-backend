@@ -1,10 +1,4 @@
-<<<<<<< HEAD
 import { UnauthorizedException } from '@nestjs/common/exceptions';
-import { RegisterClassService } from './../register-class/register-class.service';
-import { StudentRegister } from './../untils/schemas/studentRegister.schema';
-=======
-/* eslint-disable prettier/prettier */
->>>>>>> master
 import { Teacher } from './../untils/schemas/teacher.schema';
 import { Room } from './../untils/schemas/room.schema';
 import { InjectModel } from '@nestjs/mongoose';

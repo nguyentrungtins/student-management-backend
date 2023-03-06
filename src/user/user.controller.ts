@@ -1,3 +1,5 @@
+import { AuthGuard } from '@nestjs/passport';
+import { UseGuards } from '@nestjs/common';
 /* eslint-disable prettier/prettier */
 import { UserService } from './user.service';
 import { UserDataDTO } from './dto/userData.dto';
@@ -37,7 +39,8 @@ export class UserController {
 
   @Post('/student')
   getStudent(@Request() req: any) {
-    return this.userService.getUser(req.user.id)
+    //console.log(req.user);
+    return this.userService.getUser(req.user.user_id);
   }
 
   // @Post('/update')
