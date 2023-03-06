@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 export class TeacherDTO {
   name_subject: string;
   degree: string;

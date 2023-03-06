@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { User } from './user.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
@@ -5,6 +6,9 @@ import * as mongoose from 'mongoose';
 
 @Schema()
 export class UserData {
+  // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  // id_user: User;
+  
   @Prop()
   id_student: string; // mã sinh viên: ví dụ B180xxxx
 

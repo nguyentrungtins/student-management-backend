@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { AuthDTO } from './dto/auth.dto';
 import { UserService } from './../user/user.service';
 import { Body, Injectable } from '@nestjs/common';
