@@ -9,6 +9,12 @@ export class Room {
 
   @Prop()
   name_room: string;
+
+  @Prop()
+  lab: boolean;
+
+  @Prop()
+  seats: number;
 }
 
 export const RoomSchema = SchemaFactory.createForClass(Room);

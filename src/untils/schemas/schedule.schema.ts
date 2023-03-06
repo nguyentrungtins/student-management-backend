@@ -4,9 +4,9 @@ import mongoose, { HydratedDocument } from 'mongoose';
 
 @Schema()
 export class Schedule {
-  @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Class'})
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class' })
   id_class: Class;
-  
+
   @Prop()
   time_learn_date: number;
 

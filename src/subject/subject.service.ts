@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { UpdateSub } from './dto/updateSub.dto';
 import { SubjectDTO } from './dto/subject.dto';
 import { UnauthorizedException } from '@nestjs/common/exceptions';

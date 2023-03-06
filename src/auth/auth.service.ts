@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { AuthDTO } from './dto/auth.dto';
 import { UserService } from './../user/user.service';
 import { Body, Injectable } from '@nestjs/common';
@@ -14,7 +15,7 @@ export class AuthService {
     const user = await this.userService.findOneUser(auth.user_name);
 
     if (!user || user.pass_word != auth.pass_word) {
-      throw new UnauthorizedException('Not correct account!')
+      throw new UnauthorizedException('Not correct account!');
     }
     return {
       access_token: this.signJWT(

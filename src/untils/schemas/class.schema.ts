@@ -3,6 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Subject } from './subject.schema';
 import { Room } from './room.schema';
+import { StudentRegister } from './studentRegister.schema';
 
 @Schema()
 export class Class {

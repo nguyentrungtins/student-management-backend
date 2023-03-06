@@ -5,8 +5,14 @@ import mongoose, { HydratedDocument } from 'mongoose';
 
 @Schema()
 export class Teacher {
+<<<<<<< HEAD
   @Prop()
   id_teacher: string;
+=======
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' })
+  id_subject: Subject;
+
+>>>>>>> master
   @Prop()
   degree: string;
 
