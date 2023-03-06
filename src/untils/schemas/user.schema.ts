@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { UserData } from './userData.schema';
 import { Role } from './role.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';

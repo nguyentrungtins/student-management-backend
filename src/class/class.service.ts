@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Teacher } from './../untils/schemas/teacher.schema';
 import { Room } from './../untils/schemas/room.schema';
 import { InjectModel } from '@nestjs/mongoose';

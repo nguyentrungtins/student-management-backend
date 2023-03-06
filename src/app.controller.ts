@@ -1,4 +1,12 @@
-import { Controller, Get, UseGuards, Post, Request, Body } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Post,
+  Request,
+  Body,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AppService } from './app.service';
 
@@ -8,9 +16,7 @@ export class AppController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  getHello(@Request() req:any): any{
-
-    
+  getHello(@Request() req: any): any {
     return this.appService.getHello();
   }
 }
