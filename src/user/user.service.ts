@@ -1,12 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { UserData } from './../untils/schemas/userData.schema';
 import { UserDataDTO } from './dto/userData.dto';
 import { User } from './../untils/schemas/user.schema';
 import { Body, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Role } from 'src/untils/schemas';
-import { userInfo } from 'os';
+import { Role, UserData } from 'src/untils/schemas';
 
 @Injectable()
 export class UserService {
@@ -15,6 +13,7 @@ export class UserService {
     @InjectModel('Role') private readonly roleModel: Model<Role>,
     @InjectModel('UserData') private readonly userDataModel: Model<UserData>,
   ) {}
+
 
   async findOneUser(user_name: string) {
     const user = await this.userModel

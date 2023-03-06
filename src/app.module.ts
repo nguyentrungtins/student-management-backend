@@ -12,6 +12,8 @@ import { TeacherModule } from './teacher/teacher.module';
 import { MulterModule } from '@nestjs/platform-express/multer';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { RegisterClassModule } from './register-class/register-class.module';
+import { SchedulingModule } from './scheduling/scheduling.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { join } from 'path';
     SubjectModule,
     ClassModule,
     TeacherModule,
+    RegisterClassModule,
+    SchedulingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

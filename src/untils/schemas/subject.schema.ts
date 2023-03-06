@@ -19,6 +19,9 @@ export class Subject {
 
   @Prop()
   learn: number; // số tiết học: tuần học 3 tiết
+
+  @Prop()
+  lab_required: boolean;
 }
 
 export const SubjectSchema = SchemaFactory.createForClass(Subject);
