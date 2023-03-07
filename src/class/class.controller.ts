@@ -25,8 +25,8 @@ export class ClassController {
     return this.classService.addClass(newClass);
   }
   @Post('/update')
-  updateClass(@Body() updateClass: UpdateClassDTO) {
-    return this.classService.updateClass(updateClass);
+  updateClass(@Body() updateClass: UpdateClassDTO, @Query() query: any) {
+    return this.classService.updateClass(updateClass, query);
   }
   @Post('/delete')
   deleteClass(@Body() id: any) {
@@ -38,5 +38,18 @@ export class ClassController {
   getClass(@Request() req: any, @Query() query: any) {
     //console.log(req.user);
     return this.classService.getClass(query, req.user);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/get/admin')
+  getClassAdmin(@Body() query: any) {
+    //console.log(req.user);
+    return this.classService.getClassAdmin(query);
+  }
+  // đăng ki hoặc hủy đăng kí 1 sinh viên _id với class _id
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/sign')
+  signClass(@Request() req: any, @Body() information: any) {
+    return this.classService.registerClass(information, req.user);
   }
 }

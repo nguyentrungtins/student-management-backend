@@ -14,17 +14,16 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { RegisterClassModule } from './register-class/register-class.module';
 import { SchedulingModule } from './scheduling/scheduling.module';
-
 @Module({
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGODB_URL),
     MulterModule.register({
-      dest: './src/untils/images',
+      dest: './src/utils/images',
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', './src/untils/images'), 
-      serveRoot: '/images/'
+      rootPath: join(__dirname, '..', './src/utils/images'),
+      serveRoot: '/images/',
     }),
     AuthModule,
     UserModule,

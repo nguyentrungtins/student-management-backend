@@ -21,7 +21,7 @@ export class UserController {
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
-        destination: './src/untils/images',
+        destination: './src/utils/images',
         filename: (req, file, callback) => {
           const uniqueSuffix =
             Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -39,6 +39,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Get('/student')
   getStudent(@Request() req: any) {
+    //console.log(req.user);
     return this.userService.getUser(req.user.user_id);
   }
 

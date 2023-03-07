@@ -1,9 +1,8 @@
 import { Teacher } from './teacher.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import mongoose from 'mongoose';
 import { Subject } from './subject.schema';
 import { Room } from './room.schema';
-import { StudentRegister } from './studentRegister.schema';
 
 @Schema()
 export class Class {
@@ -27,6 +26,9 @@ export class Class {
 
   @Prop()
   current_student: number;
+
+  @Prop({ default: false })
+  status: boolean;
 }
 
 export const ClassSchema = SchemaFactory.createForClass(Class);

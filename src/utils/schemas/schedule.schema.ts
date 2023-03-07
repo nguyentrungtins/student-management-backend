@@ -8,16 +8,10 @@ export class Schedule {
   id_class: Class;
 
   @Prop()
-  time_learn_date: number;
+  shift: number;
 
   @Prop()
-  time_learn_lesson: string;
-
-  @Prop()
-  time_exam_date: string;
-
-  @Prop()
-  time_exam_lesson: string;
+  weekday: string;
 }
 
 export const ScheduleSchema = SchemaFactory.createForClass(Schedule);

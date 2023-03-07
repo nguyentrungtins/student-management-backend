@@ -1,19 +1,16 @@
-import { Subject } from './subject.schema';
-import { Class } from './class.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
 
 @Schema()
 export class Teacher {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' })
-  id_subject: Subject;
+  @Prop()
+  id_teacher: string;
 
   @Prop()
   degree: string;
 
   @Prop()
   teacher_name: string;
-
+  // eslint-disable-next-line prettier/prettier
   @Prop()
   teacher_age: number;
 

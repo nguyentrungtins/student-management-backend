@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
 import { UpdateTeacherDTO } from './dto/updateTeacher.dto';
 import { TeacherDTO } from './dto/teacher.dto';
-import { Teacher } from './../untils/schemas/teacher.schema';
+import { Teacher } from './../utils/schemas/teacher.schema';
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Subject } from 'src/untils/schemas';
+import { Subject } from 'src/utils/schemas';
 
 @Injectable()
 export class TeacherService {
@@ -15,12 +15,8 @@ export class TeacherService {
   ) {}
   // thêm giáo viên mới
   async addTeacher(newTeacher: TeacherDTO) {
-    const sub = await this.subjectModel.find({
-      subject_name: newTeacher.name_subject,
-    });
-
     const newT = new this.teacherModel({
-      id_subject: sub[0]._id,
+      id_teacher: newTeacher.id_teacher,
       degree: newTeacher.degree,
       teacher_name: newTeacher.teacher_name,
       teacher_age: newTeacher.teacher_age,
@@ -31,16 +27,14 @@ export class TeacherService {
 
     await newT.save();
 
-    const result = await this.teacherModel.find().populate('id_subject');
-    return result;
+    //const result = await this.teacherModel.find().populate('id_subject');
+    return 'Success';
   }
 
   // sửa thông tin giáo viên
-  async updateTeacher(updateTeacher: UpdateTeacherDTO) {
-    const teacher = await this.teacherModel.findById(updateTeacher.id_teacher);
-    const sub = await this.subjectModel.find({
-      subject_name: updateTeacher.name_subject,
-    });
+  async updateTeacher(updateTeacher: TeacherDTO, query: any) {
+    console.log(updateTeacher);
+    const teacher = await this.teacherModel.findById(updateTeacher._id);
     await teacher.updateOne({
       $set: {
         degree: updateTeacher.degree,
@@ -49,12 +43,11 @@ export class TeacherService {
         teacher_email: updateTeacher.teacher_email,
         teacher_address: updateTeacher.teacher_address,
         teacher_phone: updateTeacher.teacher_phone,
-        id_subject: sub[0]._id,
       },
     });
 
-    const result = await this.teacherModel.find();
-
+    //const result = await this.teacherModel.find();
+    const result = await this.getAllTeacher(query);
     return result;
   }
   // xóa giáo viên
@@ -62,5 +55,46 @@ export class TeacherService {
     await this.teacherModel.findByIdAndDelete(id.id_teacher);
     const result = await this.teacherModel.find();
     return result;
+  }
+
+  async getAllTeacher(filterQuery: any) {
+    const allTeacher = await this.teacherModel.find();
+
+    const filterSearch = allTeacher.filter((teacher) => {
+      if (teacher.teacher_name.includes(filterQuery.search)) return teacher;
+    });
+
+    const pageTotal = Math.ceil(filterSearch.length / filterQuery.limit);
+    const dataStart = (filterQuery.page - 1) * filterQuery.limit;
+    const dataEnd = dataStart + filterQuery.limit;
+
+    if (pageTotal == filterQuery.page) {
+      //console.log(query.page);
+      // lọc kết quả theo kết quả có đki hay không
+      const newFilterSearch = filterSearch.reverse();
+      const classData = newFilterSearch.slice(dataStart, filterSearch.length);
+      //console.log(filterSelect[0])
+      const result = {
+        totalSubject: allTeacher.length,
+        page_total: pageTotal,
+        teacher: classData,
+      };
+
+      return result;
+    } else {
+      // lọc kết quả theo kết quả có đki hay không
+      // console.log(pageTotal)
+      const newFilterSearch = filterSearch.reverse();
+
+      const classData = newFilterSearch.slice(dataStart, dataEnd);
+      //console.log(filterSelect[0])
+      const result = {
+        totalSubject: allTeacher.length,
+        page_total: pageTotal,
+        teacher: classData,
+      };
+
+      return result;
+    }
   }
 }

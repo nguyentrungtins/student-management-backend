@@ -5,5 +5,6 @@ export * from './userData.schema';
 export * from './score.schema';
 export * from './subject.schema';
 export * from './teacher.schema';
+export * from './schedule.schema';
 export * from './room.schema';
 export * from './studentRegister.schema';

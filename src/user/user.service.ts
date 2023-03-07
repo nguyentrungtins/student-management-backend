@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { UserDataDTO } from './dto/userData.dto';
-import { User } from './../untils/schemas/user.schema';
+import { User } from './../utils/schemas/user.schema';
 import { Body, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Role, UserData } from 'src/untils/schemas';
+import { Role, UserData } from 'src/utils/schemas';
 
 @Injectable()
 export class UserService {

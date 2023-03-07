@@ -1,13 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
-import { Class } from './class.schema';
 
 @Schema()
 export class Subject {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class' })
-  id_sub: Class; // mã _id trong mongodb
-
   @Prop()
   id_subject: string; // mã môn học ví dụ: CT102
 
@@ -20,8 +15,11 @@ export class Subject {
   @Prop()
   learn: number; // số tiết học: tuần học 3 tiết
 
-  @Prop()
-  lab_required: boolean;
+  @Prop([String])
+  marjor_learn: string[]; //  ngành học môn này
+
+  @Prop({ default: false })
+  lab_required: boolean; // có yêu cầu về thực hành không
 }
 
 export const SubjectSchema = SchemaFactory.createForClass(Subject);

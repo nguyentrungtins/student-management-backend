@@ -7,7 +7,7 @@ import {
   StudentRegisterSchema,
   SubjectSchema,
   TeacherSchema,
-} from 'src/untils/schemas';
+} from 'src/utils/schemas';
 import { ClassController } from './class.controller';
 import { ClassService } from './class.service';
 
