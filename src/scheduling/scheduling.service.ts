@@ -40,12 +40,15 @@ export class SchedulingService {
 
   async schedulingTimeTable(major: string) {
     const _subject = await this.subjectModel.find({ marjor_learn: major });
-    const [_id] = _subject;
-    const _class = await this.classModel.find(
-      { id_subject: _id },
-      { status: false },
-    );
-    return _subject;
+
+    const _class = await this.classModel
+      // .find({ id_subject: _id }, { status: false })
+      .find({ status: false }, { marjor_learn: major })
+      .populate('id_subject')
+      .populate('id_teacher')
+      .populate('id_room');
+
+    return _class;
   }
 
   findOne(id: number) {
