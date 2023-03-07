@@ -42,13 +42,138 @@ export class SchedulingService {
     const _subject = await this.subjectModel.find({ marjor_learn: major });
 
     const _class = await this.classModel
-      // .find({ id_subject: _id }, { status: false })
-      .find({ status: false }, { marjor_learn: major })
-      .populate('id_subject')
+      .find({ status: false })
+      // .populate('id_subject')
+      .populate({ path: 'id_subject', match: { marjor_learn: major } })
       .populate('id_teacher')
       .populate('id_room');
+    const idList = _class.map((item) => {
+      return item._id;
+    });
+    const _studentRegister = await this.studentRegisterModel.find({
+      id_class: { $in: idList },
+    });
 
-    return _class;
+    let dataClass = _class.map((item) => {
+      if (
+        item.id_teacher == null ||
+        item.id_subject == null ||
+        item.id_room == null
+      ) {
+        return;
+      }
+      const {
+        id_class: classID,
+        _id: mongo_class_id,
+        class_name,
+        id_teacher,
+        id_subject,
+      } = item;
+
+      const { id_teacher: teacherID } = id_teacher;
+      const classList = {
+        course: class_name,
+        duration: 1,
+        professor: teacherID,
+        groups: mongo_class_id.toString(),
+      };
+      return classList;
+    });
+    let dataSubject = _class.map((item) => {
+      if (
+        item.id_teacher == null ||
+        item.id_subject == null ||
+        item.id_room == null
+      ) {
+        return;
+      }
+      const { class_name, id_subject } = item;
+      const { id_subject: subjectID, subject_name } = id_subject;
+      const subjectList = {
+        name: subject_name,
+        id: id_subject.id_subject.toString(),
+      };
+      return subjectList;
+    });
+    let dataRoom = _class.map((item) => {
+      const { id_room } = item;
+
+      const { name_room, seats, lab } = id_room;
+
+      const roomList = {
+        name: name_room,
+        lab,
+        size: seats,
+      };
+      return roomList;
+    });
+
+    let dataGroup = _class.map((item) => {
+      if (
+        item.id_teacher == null ||
+        item.id_subject == null ||
+        item.id_room == null
+      ) {
+        return;
+      }
+      const { _id: groupID, class_name } = item;
+
+      const groupList = {
+        name: class_name,
+        id: groupID.toString(),
+      };
+      return groupList;
+    });
+    let dataTeacher = _class.map((item) => {
+      if (
+        item.id_teacher == null ||
+        item.id_subject == null ||
+        item.id_room == null
+      ) {
+        return;
+      }
+      const { id_teacher } = item;
+
+      const { teacher_name, id_teacher: teacherID } = id_teacher;
+
+      const teacherList = {
+        name: teacher_name,
+        id: teacherID,
+      };
+      return teacherList;
+    });
+
+    function filterData(a) {
+      const seen = {};
+
+      a = a.filter((item) => item != undefined);
+      a = a.filter((c, index) => {
+        return a.indexOf(c) === index;
+      });
+      a = a.filter(
+        (value, index, self) =>
+          index ===
+          self.findIndex(
+            (t) => t.place === value.place && t.name === value.name,
+          ),
+      );
+      return a;
+    }
+    dataSubject = filterData(dataSubject);
+    dataClass = filterData(dataClass);
+    dataTeacher = filterData(dataTeacher);
+    dataRoom = filterData(dataRoom);
+    dataGroup = filterData(dataGroup);
+    const dataInput = {
+      class: dataClass,
+      prof: dataTeacher,
+      room: dataRoom,
+      group: dataGroup,
+      course: dataSubject,
+    };
+
+    console.log(dataInput);
+    return JSON.stringify(dataInput);
   }
 
   findOne(id: number) {
