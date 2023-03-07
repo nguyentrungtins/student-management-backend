@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { AuthService } from './auth.service';
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthDTO } from './dto/auth.dto';
