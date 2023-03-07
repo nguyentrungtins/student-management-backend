@@ -4,7 +4,7 @@ import {
   ClassSchema,
   StudentRegisterSchema,
   UserSchema,
-} from 'src/untils/schemas';
+} from 'src/utils/schemas';
 import { RegisterClassService } from './register-class.service';
 
 @Module({

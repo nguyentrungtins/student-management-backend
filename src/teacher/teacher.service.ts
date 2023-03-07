@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
 import { UpdateTeacherDTO } from './dto/updateTeacher.dto';
 import { TeacherDTO } from './dto/teacher.dto';
-import { Teacher } from './../untils/schemas/teacher.schema';
+import { Teacher } from './../utils/schemas/teacher.schema';
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Subject } from 'src/untils/schemas';
+import { Subject } from 'src/utils/schemas';
 
 @Injectable()
 export class TeacherService {

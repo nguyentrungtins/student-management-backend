@@ -1,9 +1,9 @@
 import { UnauthorizedException } from '@nestjs/common/exceptions';
-import { Teacher } from './../untils/schemas/teacher.schema';
-import { Room } from './../untils/schemas/room.schema';
+import { Teacher } from './../utils/schemas/teacher.schema';
+import { Room } from './../utils/schemas/room.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
-import { Class, StudentRegister, Subject } from 'src/untils/schemas';
+import { Class, StudentRegister, Subject } from 'src/utils/schemas';
 import { Model } from 'mongoose';
 import { ClassDTO } from './dto/class.dto';
 import { UpdateClassDTO } from './dto/updateClass.dto';

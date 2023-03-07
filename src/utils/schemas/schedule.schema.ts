@@ -11,7 +11,7 @@ export class Schedule {
   shift: number;
 
   @Prop()
-  date: string;
+  weekday: string;
 }
 
 export const ScheduleSchema = SchemaFactory.createForClass(Schedule);

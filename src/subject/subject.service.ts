@@ -2,7 +2,7 @@
 import { UpdateSub } from './dto/updateSub.dto';
 import { SubjectDTO } from './dto/subject.dto';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
-import { Subject } from './../untils/schemas/subject.schema';
+import { Subject } from './../utils/schemas/subject.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { SubjectSchema, TeacherSchema } from 'src/untils/schemas';
+import { SubjectSchema, TeacherSchema } from 'src/utils/schemas';
 import { TeacherController } from './teacher.controller';
 import { TeacherService } from './teacher.service';
 
