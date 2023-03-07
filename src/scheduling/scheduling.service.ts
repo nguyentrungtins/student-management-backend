@@ -40,6 +40,7 @@ export class SchedulingService {
 
   async schedulingTimeTable(major: string) {
     const _subject = await this.subjectModel.find({ marjor_learn: major });
+<<<<<<< Updated upstream
 
     const _class = await this.classModel
       // .find({ id_subject: _id }, { status: false })
@@ -49,6 +50,14 @@ export class SchedulingService {
       .populate('id_room');
 
     return _class;
+=======
+    const [_id] = _subject;
+    const _class = await this.classModel.find(
+      { id_subject: _id },
+      { status: false },
+    );
+    return _subject;
+>>>>>>> Stashed changes
   }
 
   findOne(id: number) {
