@@ -20,7 +20,7 @@ export class TeacherController {
 
   @Post('/update')
   updateTeacher(
-    @Body() updateTeacher: UpdateTeacherDTO,
+    @Body() updateTeacher: TeacherDTO,
     @Query() filterQuery: any,
   ) {
     return this.teacherService.updateTeacher(updateTeacher, filterQuery);

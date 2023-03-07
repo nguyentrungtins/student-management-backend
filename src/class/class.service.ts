@@ -154,7 +154,7 @@ export class ClassService {
       // lọc kết quả theo kết quả có đki hay không
 
       const classData = filterSelect.slice(dataStart, filterSelect.length);
-      //console.log(filterSelect[0])
+      //console.log(classData)
       const result = {
         totalClass: allClass.length,
         page_total: pageTotal,
@@ -169,6 +169,7 @@ export class ClassService {
       // console.log(pageTotal)
       const classData = filterSelect.slice(dataStart, dataEnd);
       //console.log(filterSelect[0])
+      console.log(classData)
       const result = {
         totalClass: allClass.length,
         page_total: pageTotal,

@@ -32,7 +32,7 @@ export class TeacherService {
   }
 
   // sửa thông tin giáo viên
-  async updateTeacher(updateTeacher: UpdateTeacherDTO, query: any) {
+  async updateTeacher(updateTeacher: TeacherDTO, query: any) {
     console.log(updateTeacher);
     const teacher = await this.teacherModel.findById(updateTeacher._id);
     await teacher.updateOne({

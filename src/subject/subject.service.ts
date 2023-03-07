@@ -6,11 +6,13 @@ import { Subject } from './../untils/schemas/subject.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
+import { Marjor } from 'src/untils/schemas/marjor.schema';
 
 @Injectable()
 export class SubjectService {
   constructor(
     @InjectModel('Subject') private readonly subjectModel: Model<Subject>,
+    @InjectModel('Marjor') private readonly marjorModel: Model<Marjor>,
   ) {}
   // thêm 1 môn học vào db
   async addSubject(sub: SubjectDTO, filterQuery: any, user) {
@@ -30,6 +32,8 @@ export class SubjectService {
           subject_name: sub.subject_name,
           credit: sub.credit,
           learn: sub.learn,
+          marjor_learn: sub.marjor_learn,
+          lab_required: sub.lab_required,
         });
 
         await newSub.save();
@@ -43,18 +47,20 @@ export class SubjectService {
     }
   }
   // sửa môn học trong d
-  async updateSubject(sub: any) {
+  async updateSubject(sub: SubjectDTO, filterQuery: any) {
     const subFind = await this.subjectModel.findById(sub._id);
     //console.log(sub, subFind);
-    await subFind.update({
+    await subFind.updateOne({
       $set: {
-        id_subject: sub.id_subject,
+        id_subject: sub.id_subject.toUpperCase(),
         subject_name: sub.subject_name,
         credit: sub.credit,
         learn: sub.learn,
+        marjor_learn: sub.marjor_learn,
+        lab_required: sub.lab_required,
       },
     });
-    const result = await this.subjectModel.find();
+    const result = await this.getAllSubject(filterQuery);
     return result;
   }
   // xóa môn học trong db
@@ -69,7 +75,7 @@ export class SubjectService {
   // nhận về các môn học
   async getAllSubject(filterQuery: any) {
     const allSubject = await this.subjectModel.find();
-
+    const allMarjor = await this.marjorModel.find();
     const filterSearch = allSubject.filter((subject) => {
       if (subject.subject_name.includes(filterQuery.search)) return subject;
     });
@@ -87,16 +93,15 @@ export class SubjectService {
       const result = {
         totalSubject: allSubject.length,
         page_total: pageTotal,
-        page: filterQuery.page,
-        limit: filterQuery.limit,
         subject: classData,
-        search: filterQuery.search,
+        marjor: allMarjor,
       };
 
       return result;
     } else {
       // lọc kết quả theo kết quả có đki hay không
       // console.log(pageTotal)
+
       const newFilterSearch = filterSearch.reverse();
 
       const classData = newFilterSearch.slice(dataStart, dataEnd);
@@ -104,10 +109,8 @@ export class SubjectService {
       const result = {
         totalSubject: allSubject.length,
         page_total: pageTotal,
-        page: filterQuery.page,
-        limit: filterQuery.limit,
         subject: classData,
-        search: filterQuery.search,
+        marjor: allMarjor,
       };
 
       return result;
