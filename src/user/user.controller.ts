@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
+import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
 import { UserDataDTO } from './dto/userData.dto';
 import { Body, Controller, Post, Get, Request } from '@nestjs/common';
 import { UpdateUserDataDTO } from './dto/updateUserData.dto';
-import { UploadedFile, UseInterceptors } from '@nestjs/common/decorators';
+import { UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common/decorators';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -34,10 +35,11 @@ export class UserController {
   handleUpload(@Body() addImg: any, @UploadedFile() file: Express.Multer.File) {
     return this.userService.addUser(addImg, file.filename);
   }
-
-  @Post('/student')
+ 
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/student')
   getStudent(@Request() req: any) {
-    return this.userService.getUser(req.user.id)
+    return this.userService.getUser(req.user.user_id);
   }
 
   // @Post('/update')
