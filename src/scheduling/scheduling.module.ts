@@ -1,7 +1,7 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { SchedulingService } from './scheduling.service';
 import { SchedulingController } from './scheduling.controller';
-import { Schedule } from 'src/utils/schemas';
 import { ScheduleSchema } from 'src/utils/schemas';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RegisterClassModule } from './../register-class/register-class.module';
@@ -23,7 +23,9 @@ import {
       { name: 'StudentRegister', schema: StudentRegisterSchema },
     ]),
     RegisterClassModule,
+    HttpModule,
   ],
+
   controllers: [SchedulingController],
   providers: [SchedulingService],
 })
