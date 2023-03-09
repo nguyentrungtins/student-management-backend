@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { AuthGuard } from '@nestjs/passport';
+=======
+/* eslint-disable prettier/prettier */
+>>>>>>> master
 import { AuthService } from './auth.service';
 import {
   Body,

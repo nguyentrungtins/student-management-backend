@@ -1,7 +1,9 @@
-import { Body, Injectable } from '@nestjs/common';
+import * as axios from 'axios';
+import { Body, Injectable, ForbiddenException } from '@nestjs/common';
 import { CreateSchedulingDto } from './dto/create-scheduling.dto';
 import { UpdateSchedulingDto } from './dto/update-scheduling.dto';
 import { Schedule } from 'src/utils/schemas';
+import { map, catchError, lastValueFrom, async } from 'rxjs';
 import { Model } from 'mongoose';
 import {
   Teacher,
@@ -13,6 +15,8 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { RegisterClassModule } from './../register-class/register-class.module';
 import { RegisterClassService } from 'src/register-class/register-class.service';
+import { HttpModule, HttpService } from '@nestjs/axios';
+import { response } from 'express';
 @Injectable()
 export class SchedulingService {
   constructor(
@@ -24,6 +28,7 @@ export class SchedulingService {
     @InjectModel('StudentRegister')
     private readonly studentRegisterModel: Model<StudentRegister>,
     private readonly registerClassService: RegisterClassService,
+    private readonly httpService: HttpService,
   ) {}
   async create(body: CreateSchedulingDto): Promise<Schedule> {
     const _scheduleData = new this.scheduleModel({
@@ -43,21 +48,19 @@ export class SchedulingService {
 <<<<<<< Updated upstream
 
     const _class = await this.classModel
-      // .find({ id_subject: _id }, { status: false })
-      .find({ status: false }, { marjor_learn: major })
-      .populate('id_subject')
+      .find({ status: false })
+      // .populate('id_subject')
+      .populate({ path: 'id_subject', match: { marjor_learn: major } })
       .populate('id_teacher')
       .populate('id_room');
+    const idList = _class.map((item) => {
+      return item._id;
+    });
+    const _studentRegister = await this.studentRegisterModel.find({
+      id_class: { $in: idList },
+    });
 
     return _class;
-=======
-    const [_id] = _subject;
-    const _class = await this.classModel.find(
-      { id_subject: _id },
-      { status: false },
-    );
-    return _subject;
->>>>>>> Stashed changes
   }
 
   findOne(id: number) {
