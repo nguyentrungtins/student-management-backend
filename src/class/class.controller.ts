@@ -19,15 +19,17 @@ export class ClassController {
     private classService: ClassService,
     private registerClassService: RegisterClassService,
   ) {}
-
+  @UseGuards(AuthGuard('jwt'))
   @Post('/add')
   addClass(@Body() newClass: ClassDTO) {
     return this.classService.addClass(newClass);
   }
+  @UseGuards(AuthGuard('jwt'))
   @Post('/update')
-  updateClass(@Body() updateClass: UpdateClassDTO, @Query() query: any) {
+  updateClass(@Body() updateClass: ClassDTO, @Query() query: any) {
     return this.classService.updateClass(updateClass, query);
   }
+  @UseGuards(AuthGuard('jwt'))
   @Post('/delete')
   deleteClass(@Body() id: any) {
     return this.classService.deleteClass(id);
@@ -46,6 +48,14 @@ export class ClassController {
     //console.log(req.user);
     return this.classService.getClassAdmin(query);
   }
+
+  //reset lại một lớp học dành cho hki kế tiếp mà không cần xóa
+  @Post('/reset')
+  resetClass(@Body() id: any, @Query() query: any) {
+    //console.log(id,query)
+    return this.classService.resetClass(id, query);
+  }
+
   // đăng ki hoặc hủy đăng kí 1 sinh viên _id với class _id
   @UseGuards(AuthGuard('jwt'))
   @Post('/sign')

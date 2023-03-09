@@ -32,7 +32,8 @@ export class SubjectController {
   @UseGuards(AuthGuard('jwt'))
   @Post('/update')
   updateSubject(@Body() sub: SubjectDTO, @Query() filterQuery: any) {
-    //console.log(sub);
+    //console.log(sub,filterQuery);
+    //console.log(1)
     return this.subjectService.updateSubject(sub, filterQuery);
   }
   @UseGuards(AuthGuard('jwt'))
