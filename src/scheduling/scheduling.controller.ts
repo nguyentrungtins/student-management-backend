@@ -6,11 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Req,
+  Request,
 } from '@nestjs/common';
 import { SchedulingService } from './scheduling.service';
 import { CreateSchedulingDto } from './dto/create-scheduling.dto';
 import { UpdateSchedulingDto } from './dto/update-scheduling.dto';
 import { Schedule } from 'src/utils/schemas';
+import { AuthGuard } from '@nestjs/passport';
 @Controller('scheduling')
 export class SchedulingController {
   constructor(private readonly schedulingService: SchedulingService) {}
@@ -25,11 +29,16 @@ export class SchedulingController {
     return this.schedulingService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.schedulingService.findOne(+id);
+  @Get('/major')
+  findMajor(): Promise<any> {
+    return this.schedulingService.findAllMajor();
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/user')
+  getClassAdmin(@Request() req: any): Promise<Schedule[]> {
+    return this.schedulingService.findOne(req.user.user_id);
+  }
   @Post('/calculate/:major')
   schedulingCalculate(@Param('major') major: string) {
     return this.schedulingService.schedulingTimeTable(major);

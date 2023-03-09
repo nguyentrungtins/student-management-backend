@@ -1,18 +1,22 @@
 import { Body, Injectable, ForbiddenException } from '@nestjs/common';
 import { CreateSchedulingDto } from './dto/create-scheduling.dto';
 import { UpdateSchedulingDto } from './dto/update-scheduling.dto';
-import { Schedule } from 'src/utils/schemas';
+import { Schedule, User, UserData } from 'src/utils/schemas';
 import { map, catchError, lastValueFrom, async } from 'rxjs';
 import { Model } from 'mongoose';
 import { Class, StudentRegister, Subject } from 'src/utils/schemas';
 import { InjectModel } from '@nestjs/mongoose';
 import { HttpService } from '@nestjs/axios';
+import { Marjor } from 'src/utils/schemas/marjor.schema';
 @Injectable()
 export class SchedulingService {
   constructor(
     @InjectModel('Schedule') private readonly scheduleModel: Model<Schedule>,
+    @InjectModel('Marjor') private readonly majorModel: Model<Marjor>,
     @InjectModel('Class') private readonly classModel: Model<Class>,
     @InjectModel('Subject') private readonly subjectModel: Model<Subject>,
+    @InjectModel('UserData') private readonly userDataModel: Model<UserData>,
+    @InjectModel('User') private readonly userModel: Model<User>,
     @InjectModel('StudentRegister')
     private readonly studentRegisterModel: Model<StudentRegister>,
     private readonly httpService: HttpService,
@@ -28,6 +32,30 @@ export class SchedulingService {
   async findAll(): Promise<Schedule[]> {
     const _schedule = await this.scheduleModel.find();
     return _schedule;
+  }
+
+  async findAllMajor(): Promise<any> {
+    const _class = await this.classModel
+      .find({ status: false })
+      .populate('id_subject');
+    console.log(_class);
+    const major = _class.map((c) => {
+      return c.id_subject.marjor_learn;
+    });
+    let majorList = [];
+    major.map((c) => {
+      c.map((i) => {
+        majorList.push(i);
+      });
+    });
+
+    const uniq = [...new Set(majorList)];
+    console.log(uniq);
+    const majorData = await this.majorModel.find({ id_marjor: { $in: uniq } });
+
+    // const majors = await this.majorModel.find();
+    // return majors;
+    return majorData;
   }
 
   async schedulingTimeTable(major: string) {
@@ -160,6 +188,7 @@ export class SchedulingService {
       console.log(classItem);
       const scheduleData = new this.scheduleModel({
         id_class: classItem.classID,
+        class_name: classItem.className,
         shift_weekday_room: classItem.shift_weekday_room,
       });
       const filter = { _id: classItem.classID };
@@ -177,8 +206,19 @@ export class SchedulingService {
     return JSON.stringify(dataRes);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} scheduling`;
+  async findOne(id: string): Promise<Schedule[]> {
+    const _classRegister = await this.studentRegisterModel.find({
+      id_user: id,
+    });
+    const _classList = [];
+    _classRegister.map((item) => {
+      const { id_class } = item;
+      _classList.push(id_class);
+    });
+    const _schedule = await this.scheduleModel.find({
+      id_class: { $in: _classList },
+    });
+    return _schedule;
   }
 
   update(id: number, updateSchedulingDto: UpdateSchedulingDto) {
