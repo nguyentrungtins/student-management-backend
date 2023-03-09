@@ -14,6 +14,9 @@ export class Schedule {
   id_class: Class;
 
   @Prop()
+  class_name: string;
+
+  @Prop()
   shift_weekday_room: Array<scheduleInterface>;
 }
 
