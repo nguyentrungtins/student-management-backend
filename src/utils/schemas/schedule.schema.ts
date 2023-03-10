@@ -8,6 +8,7 @@ interface scheduleInterface {
   weekday: string;
   room: string;
 }
+
 @Schema()
 export class Schedule {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class' })
@@ -18,6 +19,9 @@ export class Schedule {
 
   @Prop()
   shift_weekday_room: Array<scheduleInterface>;
+
+  @Prop({ type: Object })
+  semester: Object;
 }
 
 export const ScheduleSchema = SchemaFactory.createForClass(Schedule);
