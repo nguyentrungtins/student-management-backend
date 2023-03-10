@@ -8,7 +8,7 @@ import * as mongoose from 'mongoose';
 export class UserData {
   // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   // id_user: User;
-  
+
   @Prop()
   id_student: string; // mã sinh viên: ví dụ B180xxxx
 

@@ -169,7 +169,7 @@ export class ClassService {
       // console.log(pageTotal)
       const classData = filterSelect.slice(dataStart, dataEnd);
       //console.log(filterSelect[0])
-      console.log(classData)
+      console.log(classData);
       const result = {
         totalClass: allClass.length,
         page_total: pageTotal,
