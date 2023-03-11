@@ -54,4 +54,27 @@ export class UserService {
     const infoUser = this.userModel.findById(id_user).populate('id_user');
     return infoUser;
   }
+
+  // async getPassword(pass_word: any) {
+  //   const pass = this.userModel.findOne(pass_word)
+  //   return pass
+  // }
+  async getPassword(password: any, infoUser: any) {
+    // return this.userModel.findById()
+    // console.log(infoUser)
+    const findUser = await this.userModel.findById(infoUser)
+    console.log(findUser)
+    if(findUser.pass_word == password.current_password) {
+      // console.log('ok')
+      await findUser.updateOne({
+        $set: {
+          pass_word: password.new_password
+        }
+      }) 
+      return "Password changed"
+    } else {
+      return "Can not change password"
+    }
+  }
+  
 }

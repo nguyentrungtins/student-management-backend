@@ -8,6 +8,7 @@ import { Class, StudentRegister, Subject } from 'src/utils/schemas';
 import { InjectModel } from '@nestjs/mongoose';
 import { HttpService } from '@nestjs/axios';
 import { Marjor } from 'src/utils/schemas/marjor.schema';
+import { getMonth, getYear, monthsToQuarters, startOfToday } from 'date-fns';
 @Injectable()
 export class SchedulingService {
   constructor(
@@ -184,12 +185,24 @@ export class SchedulingService {
       );
 
     const dataRes = await lastValueFrom(request);
+    const today = startOfToday();
+    const month = getMonth(today);
+    const quarter = monthsToQuarters(month);
+    const year = getYear(today).toString();
+    let semester = { semester: 'HK1', year: '2023' };
+    if (quarter == 1) {
+      semester = { semester: 'HK1', year: year };
+    } else {
+      semester = { semester: 'HK2', year: year };
+    }
+
     dataRes.map(async (classItem) => {
       console.log(classItem);
       const scheduleData = new this.scheduleModel({
         id_class: classItem.classID,
         class_name: classItem.className,
         shift_weekday_room: classItem.shift_weekday_room,
+        semester: semester,
       });
       const filter = { _id: classItem.classID };
       const update = { status: true };

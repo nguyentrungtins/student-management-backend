@@ -2,9 +2,14 @@
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
 import { UserDataDTO } from './dto/userData.dto';
-import { Body, Controller, Post, Get, Request } from '@nestjs/common';
+import { Body, Controller, Post, Get, Req, Request } from '@nestjs/common';
 import { UpdateUserDataDTO } from './dto/updateUserData.dto';
-import { UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common/decorators';
+import {
+  Patch,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common/decorators';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -35,12 +40,20 @@ export class UserController {
   handleUpload(@Body() addImg: any, @UploadedFile() file: Express.Multer.File) {
     return this.userService.addUser(addImg, file.filename);
   }
- 
+
   @UseGuards(AuthGuard('jwt'))
   @Get('/student')
-  getStudent(@Request() req: any) {
+  getStudent(@Req() req: any) {
     //console.log(req.user);
     return this.userService.getUser(req.user.user_id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/getPassword')
+  getPass(@Body() password: any, @Request() user: any) {
+    // return this.userService.getPassword(req.user.pass_word);
+    // console.log(user.user)
+    return this.userService.getPassword(password, user.user.user_id)
   }
 
   // @Post('/update')

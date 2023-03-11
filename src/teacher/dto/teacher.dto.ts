@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { IsEmail, IsInt, IsNotEmpty, IsString, Matches } from 'class-validator';
 
 export class TeacherDTO {
