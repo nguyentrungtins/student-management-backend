@@ -200,11 +200,6 @@ export class ClassService {
       return result;
     } else {
       const classData = filterSelect.slice(dataStart, dataEnd);
-<<<<<<< HEAD
-=======
-      //console.log(filterSelect[0])
-      console.log(classData);
->>>>>>> master
       const result = {
         totalClass: allClass.length,
         page_total: pageTotal,

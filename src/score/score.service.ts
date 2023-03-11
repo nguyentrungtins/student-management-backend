@@ -99,12 +99,11 @@ export class ScoreService {
       .find({
         id_user: user.user_id,
       })
-      .populate({ path: 'id_user', populate: { path: 'id_user' } })
+      .populate('id_user')
       .populate('id_subject');
 
     const abc = result.map((item) => {
       return {
-        user: item.id_user.id_user,
         score: item.score,
         subject: item.id_subject,
       };

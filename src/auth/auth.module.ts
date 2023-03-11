@@ -17,10 +17,6 @@ import { ConfigModule } from '@nestjs/config';
     }),
   ],
   controllers: [AuthController],
-<<<<<<< HEAD
-  providers: [AuthService, JwtStrategy, JwtRTStrategy],
-=======
   providers: [AuthService, JwtStrategy],
->>>>>>> master
 })
 export class AuthModule {}
