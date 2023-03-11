@@ -124,6 +124,7 @@ export class ClassService {
     await this.classModel.findByIdAndUpdate(id.id, {
       $set: {
         current_student: 0,
+        status: false,
       },
     });
     const result = await this.getClassAdmin(filterQuery);
@@ -200,11 +201,8 @@ export class ClassService {
       return result;
     } else {
       const classData = filterSelect.slice(dataStart, dataEnd);
-<<<<<<< HEAD
-=======
       //console.log(filterSelect[0])
-      console.log(classData);
->>>>>>> master
+
       const result = {
         totalClass: allClass.length,
         page_total: pageTotal,
