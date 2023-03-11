@@ -33,7 +33,7 @@ export class AuthService {
   }
 
   async getRefreshToken(user: any) {
-    //console.log("1 lần");
+    console.log("1 lần");
     return {
       access_token: this.signJWT(
         String(user.user_id),

@@ -7,12 +7,17 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { Marjor } from 'src/utils/schemas/marjor.schema';
+import { Class, Score, StudentRegister } from 'src/utils/schemas';
 
 @Injectable()
 export class SubjectService {
   constructor(
     @InjectModel('Subject') private readonly subjectModel: Model<Subject>,
     @InjectModel('Marjor') private readonly marjorModel: Model<Marjor>,
+    @InjectModel('Class') private readonly classModel: Model<Class>,
+    @InjectModel('Score') private readonly scoreModel: Model<Score>,
+    @InjectModel('StudentRegister')
+    private readonly studentRegisterModel: Model<StudentRegister>,
   ) {}
   // thêm 1 môn học vào db
   async addSubject(sub: SubjectDTO, filterQuery: any, user) {
@@ -65,11 +70,38 @@ export class SubjectService {
   }
   // xóa môn học trong db
   async deleteSubject(id: any) {
-    await this.subjectModel.findOneAndDelete({ _id: id.id_subject });
     // delete các bảng có dữ liệu liên quan như class, score , sedule
+    //
 
-    const result = await this.subjectModel.find();
-    return result;
+    const _class = await this.classModel.find({
+      id_subject: id.id_subject,
+    });
+
+    const _check = await _class.some((item) => item.status == true);
+    if (!_check) {
+      await this.subjectModel.findOneAndDelete({ _id: id.id_subject });
+      Promise.all(
+        _class.map(
+          async (item) =>
+            await this.studentRegisterModel.deleteMany({ id_class: item._id }),
+        ),
+      );
+
+      await this.classModel.deleteMany({
+        id_subject: id.id_subject,
+      });
+
+      await this.scoreModel.deleteMany({
+        id_subject: id.id_subject,
+      });
+
+      //console.log(_class);
+
+      const result = await this.subjectModel.find();
+      return result;
+    } else {
+      throw new UnauthorizedException('Fails!');
+    }
   }
 
   // nhận về các môn học

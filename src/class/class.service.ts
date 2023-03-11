@@ -103,7 +103,17 @@ export class ClassService {
       .populate('id_room')
       .populate('id_subject');
     return result;*/
-    console.log(id);
+    const _class = await this.classModel.findById(id.id_class);
+
+    if (_class.status) {
+      throw new UnauthorizedException('Fail!');
+    } else {
+      await this.classModel.findByIdAndDelete(id.id_class);
+      await this.studentRegisterModel.deleteMany({
+        id_class: id.id_class,
+      });
+      return 'Success';
+    }
   }
 
   async resetClass(id: any, filterQuery: any) {
@@ -144,7 +154,8 @@ export class ClassService {
           id_user: user.user_id,
           id_class: data._id,
         };
-        const is = await this.isInClass(id);
+        let is = await this.isInClass(id);
+
         return { data, inClass: is };
       }),
     );
@@ -253,18 +264,75 @@ export class ClassService {
   // Đăng kí vào 1 lớp id_class với id_user
   async registerClass(information, user: any) {
     if (information.sign == 'signin') {
-      const new_user_class = new this.studentRegisterModel({
+      // tìm xem cái ID môn học cần đăng kí là gì
+      const _class = await this.classModel
+        .findById(information.id_class)
+        .populate('id_subject');
+      const _idSubject = _class.id_subject;
+      // Tìm xem đã đăng kí môn đó hay chưa
+
+      const abc = await this.studentRegisterModel
+        .find({
+          id_user: user.user_id,
+        })
+        .populate('id_class');
+
+      const _check = abc.some(
+        (item) =>
+          item.id_class.id_subject.toString() == _idSubject._id.toString(),
+      );
+
+      // tìm kiếm thông tin trong bảng score
+      const _score = await this.scoreModel.find({
+        id_user: user.user_id,
+        id_subject: _idSubject._id,
+      });
+
+      if (!_check && _score.length == 0) {
+        const new_user_class = new this.studentRegisterModel({
+          id_user: user.user_id,
+          id_class: information.id_class,
+        });
+        await new_user_class.save();
+        const new_score = new this.scoreModel({
+          id_user: user.user_id,
+          id_class: information.id_class,
+          id_subject: information.id_subject,
+          score: null,
+        });
+
+        //console.log(new_score)
+        await new_score.save();
+
+        const update = await this.classModel.findById(information.id_class);
+        const number = update.current_student;
+        await update.updateOne({
+          $set: {
+            current_student: number + 1,
+          },
+        });
+        const result = await this.getClass(information.query, user);
+        return result;
+      } else {
+        throw new UnauthorizedException('Fails!');
+      }
+      //console.log(_idSubject._id);
+      /*const new_user_class = new this.studentRegisterModel({
         id_user: user.user_id,
         id_class: information.id_class,
       });
       await new_user_class.save();
 
+      console.log(information);
+
       const new_score = new this.scoreModel({
         id_user: user.user_id,
         id_class: information.id_class,
+        id_subject: information.id_subject,
         score: 99,
       });
 
+      //console.log(new_score)
       await new_score.save();
 
       const update = await this.classModel.findById(information.id_class);
@@ -275,11 +343,12 @@ export class ClassService {
         },
       });
       const result = await this.getClass(information.query, user);
-      return result;
+      return result;*/
     }
     if (information.sign == 'signout') {
       await this.studentRegisterModel.findOneAndDelete({
         id_user: user.user_id,
+        id_subject: information.id_subject,
         id_class: information.id_class,
       });
 
@@ -290,11 +359,14 @@ export class ClassService {
       //console.log(information.id_class)
       const update = await this.classModel.findById(information.id_class);
       const number = update.current_student;
-      await update.updateOne({
-        $set: {
-          current_student: number + -1,
-        },
-      });
+
+      if (number > 0) {
+        await update.updateOne({
+          $set: {
+            current_student: number + -1,
+          },
+        });
+      }
       const result = await this.getClass(information.query, user);
       return result;
       //return "1";
