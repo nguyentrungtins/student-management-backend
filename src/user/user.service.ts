@@ -1,4 +1,7 @@
-/* eslint-disable prettier/prettier */
+import {
+  BadRequestException,
+  UnauthorizedException,
+} from '@nestjs/common/exceptions';
 import { UserDataDTO } from './dto/userData.dto';
 import { User } from './../utils/schemas/user.schema';
 import { Body, Injectable } from '@nestjs/common';
@@ -35,7 +38,16 @@ export class UserService {
       major: addUser.major,
     });
 
+    const checkNewUser = await this.userDataModel.find({
+      id_student: newUser.id_student,
+    });
+
+    if (checkNewUser.length > 0) {
+      throw new BadRequestException('User existed');
+    }
+
     const result = await newUser.save();
+    console.log(newUser);
     const role = await this.roleModel.find({ name_role: 'Student' });
     const randomPassword = Math.random().toString(36).slice(-8);
 
@@ -45,6 +57,15 @@ export class UserService {
       pass_word: randomPassword,
       id_role: role[0]._id,
     });
+
+    const checkUserName = await this.userModel.find({
+      user_name: addNewUser.user_name,
+    });
+
+    if (checkUserName.length > 0) {
+      throw new BadRequestException('User existed');
+    }
+
     await addNewUser.save();
     const account = await this.userModel.find().populate('id_user');
     return account;
@@ -55,26 +76,20 @@ export class UserService {
     return infoUser;
   }
 
-  // async getPassword(pass_word: any) {
-  //   const pass = this.userModel.findOne(pass_word)
-  //   return pass
-  // }
   async getPassword(password: any, infoUser: any) {
-    // return this.userModel.findById()
     // console.log(infoUser)
-    const findUser = await this.userModel.findById(infoUser)
-    console.log(findUser)
-    if(findUser.pass_word == password.current_password) {
+    const findUser = await this.userModel.findById(infoUser);
+    console.log(findUser);
+    if (findUser.pass_word == password.current_password) {
       // console.log('ok')
       await findUser.updateOne({
         $set: {
-          pass_word: password.new_password
-        }
-      }) 
-      return "Password changed"
+          pass_word: password.new_password,
+        },
+      });
+      return 'Password changed';
     } else {
-      return "Can not change password"
+      return 'Can not change password';
     }
   }
-  
 }
