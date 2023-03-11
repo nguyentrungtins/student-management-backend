@@ -39,6 +39,7 @@ export class UserController {
   )
   handleUpload(@Body() addImg: any, @UploadedFile() file: Express.Multer.File) {
     return this.userService.addUser(addImg, file.filename);
+    // console.log(file)
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -56,6 +57,11 @@ export class UserController {
     return this.userService.getPassword(password, user.user.user_id)
   }
 
+  @Post('/delete')
+  deleteStudent() {
+    return "ok"
+    
+  }
   // @Post('/update')
   // updateUser(@Body() updateUser: UpdateUserDataDTO) {
   //   return this.userService.updateUser(updateUser);
