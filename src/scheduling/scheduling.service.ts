@@ -1,4 +1,10 @@
-import { Body, Injectable, ForbiddenException } from '@nestjs/common';
+import {
+  Body,
+  Injectable,
+  ForbiddenException,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateSchedulingDto } from './dto/create-scheduling.dto';
 import { UpdateSchedulingDto } from './dto/update-scheduling.dto';
 import { Schedule, User, UserData } from 'src/utils/schemas';
@@ -74,7 +80,7 @@ export class SchedulingService {
         item.id_subject == null ||
         item.id_room == null
       ) {
-        return;
+        throw new NotFoundException('Error while scheduling');
       }
       const { id_teacher } = item;
 
@@ -93,7 +99,7 @@ export class SchedulingService {
         item.id_subject == null ||
         item.id_room == null
       ) {
-        return;
+        throw new NotFoundException('Error while scheduling');
       }
       const { id_subject } = item;
       const { subject_name } = id_subject;
@@ -124,7 +130,7 @@ export class SchedulingService {
         item.id_subject == null ||
         item.id_room == null
       ) {
-        return;
+        throw new NotFoundException('Error while scheduling');
       }
       const { _id: groupID, class_name, limit_student } = item;
 
@@ -143,7 +149,7 @@ export class SchedulingService {
         item.id_subject == null ||
         item.id_room == null
       ) {
-        return;
+        throw new NotFoundException('Error while scheduling');
       }
       const { _id: mongo_class_id, id_teacher, id_subject } = item;
 
@@ -159,22 +165,6 @@ export class SchedulingService {
       return classList;
     });
 
-    function filterData(a) {
-      const seen = {};
-
-      a = a.filter((item) => item != undefined);
-      a = a.filter((c, index) => {
-        return a.indexOf(c) === index;
-      });
-      a = a.filter(
-        (value, index, self) =>
-          index ===
-          self.findIndex(
-            (t) => t.place === value.place && t.name === value.name,
-          ),
-      );
-      return a;
-    }
     const request = this.httpService
       .post('http://127.0.0.1:5000/scheduling', inputFinal)
       .pipe(map((res) => res.data))
@@ -213,6 +203,8 @@ export class SchedulingService {
       if (_schedule.length == 0) {
         await scheduleData.save();
         const doc = await this.classModel.findOneAndUpdate(filter, update);
+      } else {
+        throw new BadRequestException('Schedule existed');
       }
     });
 
@@ -223,6 +215,9 @@ export class SchedulingService {
     const _classRegister = await this.studentRegisterModel.find({
       id_user: id,
     });
+    if (!_classRegister) {
+      throw new NotFoundException('Could not find schedule for this user');
+    }
     const _classList = [];
     _classRegister.map((item) => {
       const { id_class } = item;
@@ -232,13 +227,5 @@ export class SchedulingService {
       id_class: { $in: _classList },
     });
     return _schedule;
-  }
-
-  update(id: number, updateSchedulingDto: UpdateSchedulingDto) {
-    return `This action updates a #${id} scheduling`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} scheduling`;
   }
 }
