@@ -5,6 +5,8 @@ import { UserDataDTO } from './dto/userData.dto';
 import { Body, Controller, Post, Get, Req, Request } from '@nestjs/common';
 import { UpdateUserDataDTO } from './dto/updateUserData.dto';
 import {
+  Delete,
+  Param,
   Patch,
   UploadedFile,
   UseGuards,
@@ -54,13 +56,12 @@ export class UserController {
   getPass(@Body() password: any, @Request() user: any) {
     // return this.userService.getPassword(req.user.pass_word);
     // console.log(user.user)
-    return this.userService.getPassword(password, user.user.user_id)
+    return this.userService.getPassword(password, user.user.user_id);
   }
-
-  @Post('/delete')
-  deleteStudent() {
-    return "ok"
-    
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/delete/:id')
+  remove(@Param('id') id: string) {
+    return this.userService.deleteStudent(id);
   }
   // @Post('/update')
   // updateUser(@Body() updateUser: UpdateUserDataDTO) {
