@@ -14,6 +14,11 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { RegisterClassModule } from './register-class/register-class.module';
 import { SchedulingModule } from './scheduling/scheduling.module';
+<<<<<<< HEAD
+import { ScoreModule } from './score/score.module';
+=======
+import { DashboardModule } from './dashboard/dashboard.module';
+>>>>>>> master
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -32,6 +37,11 @@ import { SchedulingModule } from './scheduling/scheduling.module';
     TeacherModule,
     RegisterClassModule,
     SchedulingModule,
+<<<<<<< HEAD
+    ScoreModule,
+=======
+    DashboardModule,
+>>>>>>> master
   ],
   controllers: [AppController],
   providers: [AppService],

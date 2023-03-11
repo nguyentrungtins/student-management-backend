@@ -6,7 +6,7 @@ export class TeacherDTO {
   id?: string;
   @IsNotEmpty()
   @IsString()
-  @Matches(/^[a-zA-Z]{1}[0-9]{3}$/)
+  @Matches(/^S[0-9]{3}$/)
   id_teacher: string;
   @IsNotEmpty()
   degree: string;

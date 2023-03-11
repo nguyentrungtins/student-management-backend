@@ -1,3 +1,4 @@
+import { JwtRTStrategy } from './strategy/jwtrf.stategy';
 import { JwtStrategy } from './strategy/jwt.stategy';
 import { UserModule } from './../user/user.module';
 import { Module } from '@nestjs/common';
@@ -16,6 +17,10 @@ import { ConfigModule } from '@nestjs/config';
     }),
   ],
   controllers: [AuthController],
+<<<<<<< HEAD
+  providers: [AuthService, JwtStrategy, JwtRTStrategy],
+=======
   providers: [AuthService, JwtStrategy],
+>>>>>>> master
 })
 export class AuthModule {}

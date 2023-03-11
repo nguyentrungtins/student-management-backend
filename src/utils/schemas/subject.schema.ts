@@ -3,6 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class Subject {
+  _id?: string;
   @Prop()
   id_subject: string; // mã môn học ví dụ: CT102
 

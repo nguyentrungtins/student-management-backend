@@ -1,32 +1,34 @@
-import { ScoreSchema, UserSchema } from 'src/utils/schemas';
-import { RegisterClassModule } from './../register-class/register-class.module';
 import { Module } from '@nestjs/common';
+import { DashboardService } from './dashboard.service';
+import { DashboardController } from './dashboard.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
   ClassSchema,
   RoomSchema,
+  ScheduleSchema,
   StudentRegisterSchema,
   SubjectSchema,
   TeacherSchema,
+  User,
+  UserDataSchema,
 } from 'src/utils/schemas';
-import { ClassController } from './class.controller';
-import { ClassService } from './class.service';
+import { MarjorSchema } from 'src/utils/schemas/marjor.schema';
 
 @Module({
   imports: [
+    MongooseModule.forFeature([{ name: 'Schedule', schema: ScheduleSchema }]),
+    MongooseModule.forFeature([{ name: 'UserData', schema: UserDataSchema }]),
+    MongooseModule.forFeature([{ name: 'Marjor', schema: MarjorSchema }]),
     MongooseModule.forFeature([{ name: 'Class', schema: ClassSchema }]),
-    MongooseModule.forFeature([{ name: 'Score', schema: ScoreSchema }]),
     MongooseModule.forFeature([{ name: 'Subject', schema: SubjectSchema }]),
     MongooseModule.forFeature([{ name: 'Teacher', schema: TeacherSchema }]),
+    MongooseModule.forFeature([{ name: 'User', schema: User }]),
     MongooseModule.forFeature([{ name: 'Room', schema: RoomSchema }]),
-    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
     MongooseModule.forFeature([
       { name: 'StudentRegister', schema: StudentRegisterSchema },
     ]),
-    RegisterClassModule,
   ],
-  controllers: [ClassController],
-  providers: [ClassService],
-  exports: [ClassService],
+  controllers: [DashboardController],
+  providers: [DashboardService],
 })
-export class ClassModule {}
+export class DashboardModule {}

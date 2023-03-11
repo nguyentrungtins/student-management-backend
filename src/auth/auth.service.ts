@@ -23,7 +23,29 @@ export class AuthService {
         user.user_name,
         user.id_role.name_role,
       ),
+      refresh_token: this.signJWTRefreshToken(
+        String(user._id),
+        user.user_name,
+        user.id_role.name_role,
+      ),
       role: user.id_role.name_role,
+    };
+  }
+
+  async getRefreshToken(user: any) {
+    console.log("1 lần");
+    return {
+      access_token: this.signJWT(
+        String(user.user_id),
+        user.user_name,
+        user.role,
+      ),
+      refresh_token: this.signJWTRefreshToken(
+        String(user.user_id),
+        user.user_name,
+        user.role,
+      ),
+      //role: user.id_role.name_role,
     };
   }
 
@@ -34,5 +56,19 @@ export class AuthService {
       user_name,
       role,
     });
+  }
+
+  signJWTRefreshToken(id_user: string, user_name: string, role: string) {
+    return this.jwtService.sign(
+      {
+        id: id_user,
+        user_name,
+        role,
+      },
+      {
+        secret: 'Refresh-token',
+        expiresIn: 24 * 60 * 60,
+      },
+    );
   }
 }
