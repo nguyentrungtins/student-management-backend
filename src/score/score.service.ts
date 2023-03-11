@@ -1,10 +1,10 @@
 import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { User } from './../utils/schemas/user.schema';
 import { Subject } from './../utils/schemas/subject.schema';
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Score } from 'src/utils/schemas';
+import { Class, Score } from 'src/utils/schemas';
 
 @Injectable()
 export class ScoreService {
@@ -12,6 +12,7 @@ export class ScoreService {
     @InjectModel('Score') private readonly scoreModel: Model<Score>,
     @InjectModel('User') private readonly userModel: Model<User>,
     @InjectModel('Subject') private readonly subjectModel: Model<Subject>,
+    @InjectModel('Class') private readonly classModel: Model<Class>,
   ) {}
 
   async getStudentInClass(id_subject: string, filterQuery: any) {
@@ -77,21 +78,30 @@ export class ScoreService {
   }
 
   async addOneStudentScore(obj: any, filterQuery) {
-    await this.scoreModel.findOneAndUpdate(
-      {
-        id_user: obj.id_user,
-        id_subject: obj.id_subject,
-      },
-      {
-        $set: {
-          score: obj.score,
-        },
-      },
-    );
+    const _class = await this.classModel.find({
+      id_subject: obj.id_subject,
+    });
 
-    const _subject = await this.subjectModel.findById(obj.id_subject);
-    //console.log(_subject);
-    return this.getStudentInClass(_subject.id_subject, filterQuery);
+    const _check = await _class.some((item) => item.status == false);
+    if (_check) {
+      throw new BadRequestException('Cac lop chua co lich day!');
+    } else {
+      await this.scoreModel.findOneAndUpdate(
+        {
+          id_user: obj.id_user,
+          id_subject: obj.id_subject,
+        },
+        {
+          $set: {
+            score: obj.score,
+          },
+        },
+      );
+
+      const _subject = await this.subjectModel.findById(obj.id_subject);
+      //console.log(_subject);
+      return this.getStudentInClass(_subject.id_subject, filterQuery);
+    }
   }
 
   async getScoreStudent(user: any) {
@@ -113,23 +123,32 @@ export class ScoreService {
   }
 
   async addMutiStudentScore(arr: any, filterQuery) {
-    Promise.all(
-      arr.map(async (item) => {
-        await this.scoreModel.findOneAndUpdate(
-          {
-            id_user: item.id_user,
-            id_subject: item.id_subject,
-          },
-          {
-            $set: {
-              score: item.score,
+    const _class = await this.classModel.find({
+      id_subject: arr[0].id_subject,
+    });
+
+    const _check = await _class.some((item) => item.status == false);
+    if (_check) {
+      throw new BadRequestException('Cac lop chua co lich day!');
+    } else {
+      Promise.all(
+        arr.map(async (item) => {
+          await this.scoreModel.findOneAndUpdate(
+            {
+              id_user: item.id_user,
+              id_subject: item.id_subject,
             },
-          },
-        );
-      }),
-    );
-    const _subject = await this.subjectModel.findById(arr[0].id_subject);
-    //console.log(_subject);
-    return this.getStudentInClass(_subject.id_subject, filterQuery);
+            {
+              $set: {
+                score: item.score,
+              },
+            },
+          );
+        }),
+      );
+      const _subject = await this.subjectModel.findById(arr[0].id_subject);
+      //console.log(_subject);
+      return this.getStudentInClass(_subject.id_subject, filterQuery);
+    }
   }
 }

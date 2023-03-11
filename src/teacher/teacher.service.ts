@@ -2,16 +2,17 @@
 import { UpdateTeacherDTO } from './dto/updateTeacher.dto';
 import { TeacherDTO } from './dto/teacher.dto';
 import { Teacher } from './../utils/schemas/teacher.schema';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Subject } from 'src/utils/schemas';
+import { Class, Subject } from 'src/utils/schemas';
 
 @Injectable()
 export class TeacherService {
   constructor(
     @InjectModel('Teacher') private readonly teacherModel: Model<Teacher>,
     @InjectModel('Subject') private readonly subjectModel: Model<Subject>,
+    @InjectModel('Class') private readonly classModel: Model<Class>,
   ) {}
   // thêm giáo viên mới
   async addTeacher(newTeacher: TeacherDTO) {
@@ -52,9 +53,19 @@ export class TeacherService {
   }
   // xóa giáo viên
   async deleteTeacher(id: any) {
-    await this.teacherModel.findByIdAndDelete(id.id_teacher);
-    const result = await this.teacherModel.find();
-    return result;
+    const _class = await this.classModel.find({
+      id_teacher: id.id_teacher,
+    });
+
+    const _check = await _class.some((item) => item.status == true);
+
+    if (!_check) {
+      await this.teacherModel.findByIdAndDelete(id.id_teacher);
+      const result = await this.teacherModel.find();
+      return result;
+    } else {
+      throw new BadRequestException('Fails');
+    }
   }
 
   async getAllTeacher(filterQuery: any) {
