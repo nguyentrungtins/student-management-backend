@@ -1,6 +1,4 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable prefer-const */
-import { Score, User } from 'src/utils/schemas';
+import { Schedule, Score, User } from 'src/utils/schemas';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { Teacher } from './../utils/schemas/teacher.schema';
 import { Room } from './../utils/schemas/room.schema';
@@ -15,6 +13,7 @@ import { RegisterClassService } from 'src/register-class/register-class.service'
 export class ClassService {
   constructor(
     @InjectModel('Class') private readonly classModel: Model<Class>,
+    @InjectModel('Schedule') private readonly scheduleModel: Model<Schedule>,
     @InjectModel('Score') private readonly scoreModel: Model<Score>,
     @InjectModel('User') private readonly userModel: Model<User>,
     @InjectModel('Subject') private readonly subjectModel: Model<Subject>,
@@ -128,6 +127,9 @@ export class ClassService {
         current_student: 0,
         status: false,
       },
+    });
+    await this.scheduleModel.deleteMany({
+      id_class: id.id,
     });
     const result = await this.getClassAdmin(filterQuery);
 

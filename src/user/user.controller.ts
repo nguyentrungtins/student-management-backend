@@ -19,6 +19,12 @@ import { extname } from 'path';
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/all')
+  getAll() {
+    return this.userService.findAll();
+  }
+
   @Post('/add')
   @UseInterceptors(
     FileInterceptor('image', {
@@ -39,6 +45,33 @@ export class UserController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     return this.userService.addUser(student, file.filename);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Patch('/update')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './src/utils/images',
+        filename: (req, file, callback) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          const filename = `student-${uniqueSuffix}${ext}`;
+          callback(null, filename);
+        },
+      }),
+    }),
+  )
+  handleUpdate(
+    @Body() student: any,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (file) {
+      return this.userService.updateUser(student, file.filename);
+    } else {
+      return this.userService.updateUser(student, null);
+    }
   }
 
   @UseGuards(AuthGuard('jwt'))

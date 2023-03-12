@@ -24,6 +24,10 @@ export class UserService {
       .populate('id_role');
     return user[0];
   }
+  async findAll() {
+    const users = await this.userDataModel.find();
+    return users;
+  }
 
   async addUser(addUser: any, imgUrl: any) {
     // console.log(addUser.name, imgUrl);
@@ -35,7 +39,7 @@ export class UserService {
       address: addUser.address,
       phone: addUser.phone,
       email: addUser.email,
-      birth_day: addUser.birth_day,
+      birth_date: addUser.birth_day,
       major: addUser.major,
     });
 
@@ -68,8 +72,65 @@ export class UserService {
     }
 
     await addNewUser.save();
-    const account = await this.userModel.find().populate('id_user');
-    return account;
+    const users = await this.userDataModel.find();
+    return users;
+  }
+
+  async updateUser(addUser: any, imgUrl: any) {
+    console.log(addUser.name, imgUrl);
+    console.log('update', addUser);
+    const updateData = {
+      id_student: addUser.id_student,
+      img: imgUrl ? imgUrl : addUser?.image,
+      first_name: addUser.first_name,
+      last_name: addUser.last_name,
+      address: addUser.address,
+      phone: addUser.phone,
+      email: addUser.email,
+      birth_date: addUser.birth_day,
+      major: addUser.major,
+    };
+
+    const checkNewUser = await this.userDataModel.findOne({
+      id_student: addUser.id_student,
+    });
+
+    if (!checkNewUser) {
+      throw new NotFoundException('Could not find user this id');
+    }
+    console.log(checkNewUser);
+    const filter = { _id: checkNewUser._id };
+    console.log(filter);
+    const updatedUserData = await this.userDataModel.findOneAndUpdate(
+      filter,
+      updateData,
+    );
+    // // console.log(newUser);
+    const role = await this.roleModel.find({ name_role: 'Student' });
+    const randomPassword = Math.random().toString(36).slice(-8);
+
+    const addNewUserData = {
+      user_name: addUser.id_student,
+      pass_word: addUser.pass_word,
+    };
+
+    const checkUserName = await this.userModel.find({
+      user_name: updateData.id_student,
+    });
+
+    if (!checkUserName) {
+      throw new BadRequestException('User existed');
+    }
+
+    const updatedUser = await this.userModel.findOneAndUpdate(
+      { user_name: updateData.id_student },
+      addNewUserData,
+    );
+    if (!updatedUser) {
+      throw new BadRequestException('Can not update user');
+    }
+    const users = await this.userDataModel.find();
+    return users;
   }
 
   async getUser(id_user: any) {

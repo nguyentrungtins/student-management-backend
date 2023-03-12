@@ -35,7 +35,7 @@ export class SchedulingController {
   getClassAdmin(@Request() req: any): Promise<Schedule[]> {
     return this.schedulingService.findOne(req.user.user_id);
   }
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @Post('/calculate/:major')
   schedulingCalculate(@Param('major') major: string) {
     return this.schedulingService.schedulingTimeTable(major);

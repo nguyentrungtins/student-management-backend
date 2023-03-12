@@ -74,6 +74,7 @@ export class SchedulingService {
       .populate('id_teacher')
       .populate('id_room');
 
+    console.log(_class.length);
     const inputFinal = [];
     const dataTeacher = _class.map((item) => {
       if (
@@ -81,7 +82,7 @@ export class SchedulingService {
         item.id_subject == null ||
         item.id_room == null
       ) {
-        throw new NotFoundException('Error while scheduling');
+        return;
       }
       const { id_teacher } = item;
 
@@ -94,13 +95,14 @@ export class SchedulingService {
       inputFinal.push({ prof: teacherList });
       return teacherList;
     });
+
     const dataSubject = _class.map((item) => {
       if (
         item.id_teacher == null ||
         item.id_subject == null ||
         item.id_room == null
       ) {
-        throw new NotFoundException('Error while scheduling');
+        return;
       }
       const { id_subject } = item;
       const { subject_name } = id_subject;
@@ -131,7 +133,7 @@ export class SchedulingService {
         item.id_subject == null ||
         item.id_room == null
       ) {
-        throw new NotFoundException('Error while scheduling');
+        return;
       }
       const { _id: groupID, class_name, limit_student } = item;
 
@@ -150,7 +152,7 @@ export class SchedulingService {
         item.id_subject == null ||
         item.id_room == null
       ) {
-        throw new NotFoundException('Error while scheduling');
+        return;
       }
       const { _id: mongo_class_id, id_teacher, id_subject } = item;
 
@@ -203,13 +205,13 @@ export class SchedulingService {
       });
       if (_schedule.length == 0) {
         await scheduleData.save();
-        const doc = await this.classModel.findOneAndUpdate(filter, update);
+        await this.classModel.findOneAndUpdate(filter, update);
       } else {
-        throw new BadRequestException('Schedule existed');
+        throw new ForbiddenException('Schedule existed');
       }
     });
-
-    return JSON.stringify(dataRes);
+    const resultRes = await this.findAllMajor();
+    return resultRes;
   }
 
   async findOne(id: string): Promise<Schedule[]> {

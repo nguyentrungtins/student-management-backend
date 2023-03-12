@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
   ClassSchema,
+  ScheduleSchema,
   ScoreSchema,
   StudentRegisterSchema,
   SubjectSchema,
@@ -18,6 +19,7 @@ import { SubjectService } from './subject.service';
       { name: 'StudentRegister', schema: StudentRegisterSchema },
     ]),
     MongooseModule.forFeature([{ name: 'Class', schema: ClassSchema }]),
+    MongooseModule.forFeature([{ name: 'Schedule', schema: ScheduleSchema }]),
     MongooseModule.forFeature([{ name: 'Marjor', schema: MarjorSchema }]),
   ],
   controllers: [SubjectController],
