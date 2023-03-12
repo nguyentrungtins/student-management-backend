@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { Marjor } from 'src/utils/schemas/marjor.schema';
-import { Class, Score, StudentRegister } from 'src/utils/schemas';
+import { Class, Schedule, Score, StudentRegister } from 'src/utils/schemas';
 
 @Injectable()
 export class SubjectService {
@@ -16,6 +16,7 @@ export class SubjectService {
     @InjectModel('Marjor') private readonly marjorModel: Model<Marjor>,
     @InjectModel('Class') private readonly classModel: Model<Class>,
     @InjectModel('Score') private readonly scoreModel: Model<Score>,
+    @InjectModel('Schedule') private readonly scheduleModel: Model<Schedule>,
     @InjectModel('StudentRegister')
     private readonly studentRegisterModel: Model<StudentRegister>,
   ) {}
@@ -81,10 +82,10 @@ export class SubjectService {
     if (!_check) {
       await this.subjectModel.findOneAndDelete({ _id: id.id_subject });
       Promise.all(
-        _class.map(
-          async (item) =>
-            await this.studentRegisterModel.deleteMany({ id_class: item._id }),
-        ),
+        _class.map(async (item) => {
+          await this.studentRegisterModel.deleteMany({ id_class: item._id }),
+            await this.scheduleModel.deleteMany({ id_class: item._id });
+        }),
       );
 
       await this.classModel.deleteMany({
