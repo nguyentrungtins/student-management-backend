@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { UpdateTeacherDTO } from './dto/updateTeacher.dto';
 import { TeacherDTO } from './dto/teacher.dto';
 import { TeacherService } from './teacher.service';

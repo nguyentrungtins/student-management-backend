@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 /* eslint-disable prettier/prettier */
-/* eslint-disable prefer-const */
-import { Body, Injectable, ForbiddenException } from '@nestjs/common';
-=======
 import {
   Body,
   Injectable,
@@ -10,7 +6,6 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
->>>>>>> 2b9a9fc7f1546fa48c58125f260b5c8e32be36d5
 import { CreateSchedulingDto } from './dto/create-scheduling.dto';
 import { UpdateSchedulingDto } from './dto/update-scheduling.dto';
 import { Schedule, User, UserData } from 'src/utils/schemas';

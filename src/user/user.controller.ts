@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
 import { UserDataDTO } from './dto/userData.dto';
@@ -51,31 +50,11 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Post('/getPassword')
   getPass(@Body() password: any, @Request() user: any) {
-<<<<<<< HEAD
-    return this.userService.getPassword(password, user.user.user_id);
-  }
-
-  @Post('/delete')
-  deleteStudent() {
-    return 'ok';
-=======
-    // return this.userService.getPassword(req.user.pass_word);
-    // console.log(user.user)
     return this.userService.getPassword(password, user.user.user_id);
   }
   @UseGuards(AuthGuard('jwt'))
   @Delete('/delete/:id')
   remove(@Param('id') id: string) {
     return this.userService.deleteStudent(id);
->>>>>>> 2b9a9fc7f1546fa48c58125f260b5c8e32be36d5
   }
-  // @Post('/update')
-  // updateUser(@Body() updateUser: UpdateUserDataDTO) {
-  //   return this.userService.updateUser(updateUser);
-  // }
-
-  // @Post('/delete')
-  // deleteUser(@Body() id: string) {
-  //   return this.userService.deleteUser(id);
-  // }
 }

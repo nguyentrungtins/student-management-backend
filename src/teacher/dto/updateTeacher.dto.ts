@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 export class UpdateTeacherDTO {
   _id: string;
   degree: string;
