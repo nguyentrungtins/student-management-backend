@@ -47,7 +47,7 @@ export class UserService {
     }
 
     const result = await newUser.save();
-    console.log(newUser);
+    // console.log(newUser);
     const role = await this.roleModel.find({ name_role: 'Student' });
     const randomPassword = Math.random().toString(36).slice(-8);
 
@@ -81,7 +81,6 @@ export class UserService {
     const findUser = await this.userModel.findById(infoUser);
     console.log(findUser);
     if (findUser.pass_word == password.current_password) {
-      // console.log('ok')
       await findUser.updateOne({
         $set: {
           pass_word: password.new_password,

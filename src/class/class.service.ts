@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable prefer-const */
 import { Score, User } from 'src/utils/schemas';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { Teacher } from './../utils/schemas/teacher.schema';
@@ -200,11 +202,6 @@ export class ClassService {
       return result;
     } else {
       const classData = filterSelect.slice(dataStart, dataEnd);
-<<<<<<< HEAD
-=======
-      //console.log(filterSelect[0])
-      console.log(classData);
->>>>>>> master
       const result = {
         totalClass: allClass.length,
         page_total: pageTotal,
