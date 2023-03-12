@@ -5,12 +5,13 @@ import { Teacher } from './../utils/schemas/teacher.schema';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Class, Subject } from 'src/utils/schemas';
+import { Class, Schedule, Subject } from 'src/utils/schemas';
 
 @Injectable()
 export class TeacherService {
   constructor(
     @InjectModel('Teacher') private readonly teacherModel: Model<Teacher>,
+    @InjectModel('Schedule') private readonly scheduleModel: Model<Schedule>,
     @InjectModel('Subject') private readonly subjectModel: Model<Subject>,
     @InjectModel('Class') private readonly classModel: Model<Class>,
   ) {}
