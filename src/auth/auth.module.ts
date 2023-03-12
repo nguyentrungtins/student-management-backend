@@ -7,9 +7,12 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import { MarjorSchema } from 'src/utils/schemas/marjor.schema';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
+    MongooseModule.forFeature([{ name: 'Marjor', schema: MarjorSchema }]),
     ConfigModule.forRoot(),
     UserModule,
     JwtModule.register({

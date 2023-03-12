@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
 import { UserDataDTO } from './dto/userData.dto';
@@ -90,5 +91,22 @@ export class UserService {
     } else {
       return 'Can not change password';
     }
+  }
+  async deleteStudent(id: string) {
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      throw new NotFoundException('Student not found');
+    }
+    const userDataDeleted = await this.userDataModel.findOneAndDelete({
+      id_student: user.user_name,
+    });
+    const userDeleted = await this.userModel.findByIdAndDelete(id);
+    if (!userDeleted || !userDataDeleted) {
+      throw new BadRequestException('Cannot delete student');
+    } else {
+      const newList = await this.userDataModel.find();
+      return newList;
+    }
+    return userDeleted;
   }
 }

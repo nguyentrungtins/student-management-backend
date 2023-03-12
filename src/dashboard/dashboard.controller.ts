@@ -18,6 +18,7 @@ import { AuthGuard } from '@nestjs/passport';
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   create(@Body() createDashboardDto: CreateDashboardDto) {
     return this.dashboardService.create(createDashboardDto);
@@ -36,17 +37,4 @@ export class DashboardController {
     return this.dashboardService.findDashboardDataAdmin();
     // return req.user;
   }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateDashboardDto: UpdateDashboardDto,
-  ) {
-    return this.dashboardService.update(+id, updateDashboardDto);
-  }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.dashboardService.remove(+id);
-  // }
 }

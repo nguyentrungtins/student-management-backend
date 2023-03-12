@@ -126,6 +126,7 @@ export class ClassService {
     await this.classModel.findByIdAndUpdate(id.id, {
       $set: {
         current_student: 0,
+        status: false,
       },
     });
     const result = await this.getClassAdmin(filterQuery);
