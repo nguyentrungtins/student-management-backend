@@ -7,6 +7,7 @@ import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Marjor } from 'src/utils/schemas/marjor.schema';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -20,45 +21,103 @@ export class AuthService {
       await this.userService.findOneUser(auth.user_name)
     ).populate('id_user');
 
-    if (!user || user.pass_word != auth.pass_word) {
-      throw new UnauthorizedException('Not correct account!');
-    }
+    //console.log(user);
 
-    if (user.id_role.name_role == "Admin") {
-      return {
-        access_token: this.signJWT(
-          String(user._id),
-          user.id_role.name_role,
-          '',
-        ),
-        refresh_token: this.signJWTRefreshToken(
-          String(user._id),
-          user.id_role.name_role,
-          '',
-        ),
-        role: user.id_role.name_role,
-      };
+    if (!user) {
+      throw new UnauthorizedException('Not correct account!');
     } else {
-      const _marjor = await this.marjorModel.find({
-        id_marjor: user.id_user.major,
-      });
-      const name_marjor = _marjor[0].name_marjor || '';
-      const name = `${user.id_user.first_name} ${user.id_user.last_name}` || '';
-      const totalName = name_marjor + '|' + name || '';
-      //console.log(name);
-      return {
-        access_token: this.signJWT(
-          String(user._id),
-          user.id_role.name_role,
-          String(totalName),
-        ),
-        refresh_token: this.signJWTRefreshToken(
-          String(user._id),
-          user.id_role.name_role,
-          String(totalName),
-        ),
-        role: user.id_role.name_role,
-      };
+      if (
+        user.pass_word == auth.pass_word &&
+        user.pass_word == 'defaultpassword'
+      ) {
+        if (user.id_role.name_role == 'Admin') {
+          return {
+            access_token: this.signJWT(
+              String(user._id),
+              user.id_role.name_role,
+              '',
+            ),
+            refresh_token: this.signJWTRefreshToken(
+              String(user._id),
+              user.id_role.name_role,
+              '',
+            ),
+            role: user.id_role.name_role,
+          };
+        } else {
+          const _marjor = await this.marjorModel.find({
+            id_marjor: user.id_user.major,
+          });
+          const name_marjor = _marjor[0].name_marjor || '';
+          const name =
+            `${user.id_user.first_name} ${user.id_user.last_name}` || '';
+          const totalName = name_marjor + '|' + name || '';
+          //console.log(name);
+          return {
+            access_token: this.signJWT(
+              String(user._id),
+              user.id_role.name_role,
+              String(totalName),
+            ),
+            refresh_token: this.signJWTRefreshToken(
+              String(user._id),
+              user.id_role.name_role,
+              String(totalName),
+            ),
+            role: user.id_role.name_role,
+          };
+        }
+      } else {
+        //const saltOrRounds = 1;
+        //c/onst password = 'abc123';
+        //const hash = await bcrypt.hash(password,saltOrRounds);
+
+        //console.log(hash);
+
+        const isMatch = await bcrypt.compare(auth.pass_word,user.pass_word);
+
+        if (isMatch) {
+          if (user.id_role.name_role == 'Admin') {
+            return {
+              access_token: this.signJWT(
+                String(user._id),
+                user.id_role.name_role,
+                '',
+              ),
+              refresh_token: this.signJWTRefreshToken(
+                String(user._id),
+                user.id_role.name_role,
+                '',
+              ),
+              role: user.id_role.name_role,
+            };
+          } else {
+            const _marjor = await this.marjorModel.find({
+              id_marjor: user.id_user.major,
+            });
+            const name_marjor = _marjor[0].name_marjor || '';
+            const name =
+              `${user.id_user.first_name} ${user.id_user.last_name}` || '';
+            const totalName = name_marjor + '|' + name || '';
+            //console.log(name);
+            return {
+              access_token: this.signJWT(
+                String(user._id),
+                user.id_role.name_role,
+                String(totalName),
+              ),
+              refresh_token: this.signJWTRefreshToken(
+                String(user._id),
+                user.id_role.name_role,
+                String(totalName),
+              ),
+              role: user.id_role.name_role,
+            };
+          }
+        } else {
+          throw new UnauthorizedException('Not correct account!');
+        }
+      }
     }
   }
 
