@@ -60,7 +60,7 @@ export class UserService {
     const addNewUser = new this.userModel({
       id_user: result._id,
       user_name: result.id_student,
-      pass_word: `defaultpasssword`,
+      pass_word: `defaultpassword`,
       id_role: role[0]._id,
     });
 
@@ -112,7 +112,7 @@ export class UserService {
 
     const addNewUserData = {
       user_name: addUser.id_student,
-      pass_word: addUser.pass_word,
+      // pass_word: addUser.pass_word,
     };
 
     const checkUserName = await this.userModel.find({
@@ -158,14 +158,12 @@ export class UserService {
     }
   }
   async deleteStudent(id: string) {
-    const user = await this.userModel.findById(id);
+    const user = await this.userDataModel.findById(id);
     if (!user) {
       throw new NotFoundException('Student not found');
     }
-    const userDataDeleted = await this.userDataModel.findOneAndDelete({
-      id_student: user.user_name,
-    });
-    const userDeleted = await this.userModel.findByIdAndDelete(id);
+    const userDataDeleted = await this.userDataModel.findByIdAndDelete(id);
+    const userDeleted = await this.userModel.findOneAndDelete({ id_user: id });
     if (!userDeleted || !userDataDeleted) {
       throw new BadRequestException('Cannot delete student');
     } else {
