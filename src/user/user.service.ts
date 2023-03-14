@@ -10,6 +10,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Role, UserData } from 'src/utils/schemas';
 import * as bcrypt from 'bcrypt';
+import { add } from 'date-fns';
 
 @Injectable()
 export class UserService {
@@ -97,9 +98,7 @@ export class UserService {
     if (!checkNewUser) {
       throw new NotFoundException('Could not find user this id');
     }
-    console.log(checkNewUser);
     const filter = { _id: checkNewUser._id };
-    console.log(filter);
     const updatedUserData = await this.userDataModel.findOneAndUpdate(
       filter,
       updateData,
@@ -113,12 +112,13 @@ export class UserService {
       // pass_word: addUser.pass_word,
     };
 
-    const checkUserName = await this.userModel.find({
-      id_user: addUser.id,
+    const checkUserName = await this.userModel.findOne({
+      user_name: addUser.id_student,
     });
-
-    if (!checkUserName) {
-      throw new BadRequestException('User existed');
+    if (checkUserName) {
+      if (checkUserName.id_user !== addUser.id) {
+        throw new BadRequestException('User ID existed');
+      }
     }
 
     const updatedUser = await this.userModel.findOneAndUpdate(
