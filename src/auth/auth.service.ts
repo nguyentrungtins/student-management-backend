@@ -17,10 +17,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
   async login(auth: AuthDTO) {
-    const user = await (
-      await this.userService.findOneUser(auth.user_name)
-    ).populate('id_user');
-
+    const user = await this.userService.findOneUser(auth.user_name);
     //console.log(user);
 
     if (!user) {
@@ -74,7 +71,7 @@ export class AuthService {
 
         //console.log(hash);
 
-        const isMatch = await bcrypt.compare(auth.pass_word,user.pass_word);
+        const isMatch = await bcrypt.compare(auth.pass_word, user.pass_word);
 
         if (isMatch) {
           if (user.id_role.name_role == 'Admin') {
@@ -89,7 +86,7 @@ export class AuthService {
                 user.id_role.name_role,
                 '',
               ),
-              role: user.id_role.name_role, 
+              role: user.id_role.name_role,
             };
           } else {
             const _marjor = await this.marjorModel.find({

@@ -23,7 +23,8 @@ export class UserService {
   async findOneUser(user_name: string) {
     const user = await this.userModel
       .find({ user_name: user_name })
-      .populate('id_role');
+      .populate('id_role')
+      .populate('id_user');
     return user[0];
   }
   async findAll() {
