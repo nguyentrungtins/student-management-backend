@@ -116,7 +116,7 @@ export class UserService {
       user_name: addUser.id_student,
     });
     if (checkUserName) {
-      if (checkUserName.id_user !== addUser.id) {
+      if (checkUserName.id_user != addUser.id) {
         throw new BadRequestException('User ID existed');
       }
     }
