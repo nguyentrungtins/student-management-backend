@@ -92,9 +92,7 @@ export class UserService {
       major: addUser.major,
     };
 
-    const checkNewUser = await this.userDataModel.findOne({
-      id_student: addUser.id_student,
-    });
+    const checkNewUser = await this.userDataModel.findById(addUser.id);
 
     if (!checkNewUser) {
       throw new NotFoundException('Could not find user this id');
@@ -116,7 +114,7 @@ export class UserService {
     };
 
     const checkUserName = await this.userModel.find({
-      user_name: updateData.id_student,
+      id_user: addUser.id,
     });
 
     if (!checkUserName) {
@@ -124,7 +122,7 @@ export class UserService {
     }
 
     const updatedUser = await this.userModel.findOneAndUpdate(
-      { user_name: updateData.id_student },
+      { id_user: addUser.id },
       addNewUserData,
     );
     if (!updatedUser) {
