@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { CreateSchedulingDto } from './dto/create-scheduling.dto';
 import { UpdateSchedulingDto } from './dto/update-scheduling.dto';
-import { Schedule, User, UserData } from 'src/utils/schemas';
+import { Room, Schedule, User, UserData } from 'src/utils/schemas';
 import { map, catchError, lastValueFrom, async } from 'rxjs';
 import { Model, Promise } from 'mongoose';
 import { Class, StudentRegister, Subject } from 'src/utils/schemas';
@@ -25,6 +25,7 @@ export class SchedulingService {
     @InjectModel('Subject') private readonly subjectModel: Model<Subject>,
     @InjectModel('UserData') private readonly userDataModel: Model<UserData>,
     @InjectModel('User') private readonly userModel: Model<User>,
+    @InjectModel('Room') private readonly roomModel: Model<Room>,
     @InjectModel('StudentRegister')
     private readonly studentRegisterModel: Model<StudentRegister>,
     private readonly httpService: HttpService,
@@ -50,7 +51,7 @@ export class SchedulingService {
       .populate('id_teacher')
       .populate('id_room');
 
-    console.log(_class.length);
+    // console.log(_class.length);
     const inputFinal = [];
     const dataTeacher = _class.map((item) => {
       if (
@@ -90,10 +91,11 @@ export class SchedulingService {
       inputFinal.push({ course: subjectList });
       return subjectList;
     });
-    const dataRoom = _class.map((item) => {
+    const rooms = await this.roomModel.find();
+    const dataRoom = rooms.map((item) => {
       const { id_room } = item;
 
-      const { name_room, seats, lab } = id_room;
+      const { name_room, seats, lab } = item;
 
       const roomList = {
         name: name_room,
@@ -143,7 +145,7 @@ export class SchedulingService {
       inputFinal.push({ class: classList });
       return classList;
     });
-
+    console.log(inputFinal);
     const request = this.httpService
       .post('http://127.0.0.1:5000/scheduling', inputFinal)
       .pipe(map((res) => res.data))
@@ -173,6 +175,7 @@ export class SchedulingService {
           shift_weekday_room: classItem.shift_weekday_room,
           semester: semester,
         });
+        console.log(scheduleData);
         const filter = { _id: classItem.classID };
         const update = { status: true };
 
