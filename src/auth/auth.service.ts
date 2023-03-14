@@ -89,7 +89,7 @@ export class AuthService {
                 user.id_role.name_role,
                 '',
               ),
-              role: user.id_role.name_role,
+              role: user.id_role.name_role, 
             };
           } else {
             const _marjor = await this.marjorModel.find({

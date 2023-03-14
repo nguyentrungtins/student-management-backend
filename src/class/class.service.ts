@@ -36,11 +36,16 @@ export class ClassService {
       id_room: newClass.id_room.toUpperCase(),
     });
 
+    const _id = await this.classModel.find({
+      id_class: newClass.id_class.toUpperCase(),
+    });
+
     if (
       subject.length == 0 ||
       teacher.length == 0 ||
       room.length == 0 ||
-      newClass.limit_student == 0
+      newClass.limit_student == 0 ||
+      _id.length > 0
     ) {
       throw new UnauthorizedException('Error!');
     } else {

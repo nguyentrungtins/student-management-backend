@@ -1,3 +1,4 @@
+import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { UpdateTeacherDTO } from './dto/updateTeacher.dto';
 import { TeacherDTO } from './dto/teacher.dto';
 import { Teacher } from './../utils/schemas/teacher.schema';
@@ -16,20 +17,28 @@ export class TeacherService {
   ) {}
   // thêm giáo viên mới
   async addTeacher(newTeacher: TeacherDTO) {
-    const newT = new this.teacherModel({
+    const _id = await this.teacherModel.find({
       id_teacher: newTeacher.id_teacher,
-      degree: newTeacher.degree,
-      teacher_name: newTeacher.teacher_name,
-      teacher_age: newTeacher.teacher_age,
-      teacher_address: newTeacher.teacher_address,
-      teacher_phone: newTeacher.teacher_phone,
-      teacher_email: newTeacher.teacher_email,
     });
 
-    await newT.save();
+    if (_id.length > 0) {
+      throw new UnauthorizedException('Fails');
+    } else {
+      const newT = new this.teacherModel({
+        id_teacher: newTeacher.id_teacher,
+        degree: newTeacher.degree,
+        teacher_name: newTeacher.teacher_name,
+        teacher_age: newTeacher.teacher_age,
+        teacher_address: newTeacher.teacher_address,
+        teacher_phone: newTeacher.teacher_phone,
+        teacher_email: newTeacher.teacher_email,
+      });
 
-    //const result = await this.teacherModel.find().populate('id_subject');
-    return 'Success';
+      await newT.save();
+
+      //const result = await this.teacherModel.find().populate('id_subject');
+      return 'Success';
+    }
   }
 
   // sửa thông tin giáo viên
