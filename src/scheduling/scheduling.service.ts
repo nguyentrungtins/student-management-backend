@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Body,
   Injectable,
@@ -176,8 +175,14 @@ export class SchedulingService {
           semester: semester,
         });
         console.log(scheduleData);
+        const _room = await this.roomModel.find({
+          name_room: classItem.shift_weekday_room[0].room,
+        });
+        console.log(_room);
         const filter = { _id: classItem.classID };
-        const update = { status: true };
+        //const update = { status: true };
+
+        const update = { status: true, id_room: _room[0]._id };
 
         const _schedule = await this.scheduleModel.find({
           id_class: classItem.classID,
