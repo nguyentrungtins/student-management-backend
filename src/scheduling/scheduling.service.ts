@@ -10,7 +10,7 @@ import { CreateSchedulingDto } from './dto/create-scheduling.dto';
 import { UpdateSchedulingDto } from './dto/update-scheduling.dto';
 import { Schedule, User, UserData } from 'src/utils/schemas';
 import { map, catchError, lastValueFrom, async } from 'rxjs';
-import { Model } from 'mongoose';
+import { Model, Promise } from 'mongoose';
 import { Class, StudentRegister, Subject } from 'src/utils/schemas';
 import { InjectModel } from '@nestjs/mongoose';
 import { HttpService } from '@nestjs/axios';
@@ -40,30 +40,6 @@ export class SchedulingService {
   async findAll(): Promise<Schedule[]> {
     const _schedule = await this.scheduleModel.find();
     return _schedule;
-  }
-
-  async findAllMajor(): Promise<any> {
-    const _class = await this.classModel
-      .find({ status: false })
-      .populate('id_subject');
-    console.log(_class);
-    const major = _class.map((c) => {
-      return c.id_subject.marjor_learn;
-    });
-    let majorList = [];
-    major.map((c) => {
-      c.map((i) => {
-        majorList.push(i);
-      });
-    });
-
-    const uniq = [...new Set(majorList)];
-    console.log(uniq);
-    const majorData = await this.majorModel.find({ id_marjor: { $in: uniq } });
-
-    // const majors = await this.majorModel.find();
-    // return majors;
-    return majorData;
   }
 
   async schedulingTimeTable(major: string) {
@@ -189,31 +165,54 @@ export class SchedulingService {
       semester = { semester: 'HK2', year: year };
     }
 
-    dataRes.map(async (classItem) => {
-      console.log(classItem);
-      const scheduleData = new this.scheduleModel({
-        id_class: classItem.classID,
-        class_name: classItem.className,
-        shift_weekday_room: classItem.shift_weekday_room,
-        semester: semester,
-      });
-      const filter = { _id: classItem.classID };
-      const update = { status: true };
+    await Promise.all(
+      dataRes.map(async (classItem) => {
+        const scheduleData = new this.scheduleModel({
+          id_class: classItem.classID,
+          class_name: classItem.className,
+          shift_weekday_room: classItem.shift_weekday_room,
+          semester: semester,
+        });
+        const filter = { _id: classItem.classID };
+        const update = { status: true };
 
-      const _schedule = await this.scheduleModel.find({
-        id_class: classItem.classID,
-      });
-      if (_schedule.length == 0) {
-        await scheduleData.save();
-        await this.classModel.findOneAndUpdate(filter, update);
-      } else {
-        throw new ForbiddenException('Schedule existed');
-      }
-    });
+        const _schedule = await this.scheduleModel.find({
+          id_class: classItem.classID,
+        });
+        if (_schedule.length == 0) {
+          await scheduleData.save();
+          await this.classModel.findOneAndUpdate(filter, update);
+        } else {
+          throw new ForbiddenException('Schedule existed');
+        }
+      }),
+    );
     const resultRes = await this.findAllMajor();
     return resultRes;
   }
+  async findAllMajor(): Promise<any> {
+    const _class = await this.classModel
+      .find({ status: false })
+      .populate('id_subject');
+    console.log(_class);
+    const major = _class.map((c) => {
+      return c.id_subject.marjor_learn;
+    });
+    let majorList = [];
+    major.map((c) => {
+      c.map((i) => {
+        majorList.push(i);
+      });
+    });
 
+    const uniq = [...new Set(majorList)];
+    console.log(uniq);
+    const majorData = await this.majorModel.find({ id_marjor: { $in: uniq } });
+
+    // const majors = await this.majorModel.find();
+    // return majors;
+    return majorData;
+  }
   async findOne(id: string): Promise<Schedule[]> {
     const _classRegister = await this.studentRegisterModel.find({
       id_user: id,
