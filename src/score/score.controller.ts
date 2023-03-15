@@ -32,7 +32,7 @@ export class ScoreController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('/student/get')
-  getScoreStudent(@Request() req: any) {
+  getScoreStudent(@Request() req: any) { 
     return this.scoreServive.getScoreStudent(req.user);
   }
 }
